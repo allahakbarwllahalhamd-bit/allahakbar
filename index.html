@@ -212,14 +212,14 @@ async function loadGroupData(){
   const [studentsRes,surveyRes,savedRes]=await Promise.all([
     withTimeout(supabaseClient.from("students").select("id,group_id,name,answers").eq("group_id",currentGroupId).order("id",{ascending:true})),
     withTimeout(supabaseClient.from("survey_settings").select("group_id,title,choices").eq("group_id",currentGroupId).maybeSingle()),
-    withTimeout(supabaseClient.from("saved_surveys").select("id,group_id,title,day,date,students,created_at").eq("group_id",currentGroupId).order("created_at",{ascending:false}))
+    withTimeout(supabaseClient.from("saved_surveys").select("id,group_id,title,day,survey_date,students,created_at").eq("group_id",currentGroupId).order("created_at",{ascending:false}))
   ]);
   if(studentsRes.error)throw studentsRes.error;
   if(surveyRes.error)throw surveyRes.error;
   if(savedRes.error)throw savedRes.error;
   currentStudents=(studentsRes.data||[]).map(s=>({...s,answers:Array.isArray(s.answers)?s.answers:[]}));
   currentSurvey=normalizeSurvey(surveyRes.data);
-  currentSavedSurveys=(savedRes.data||[]).map(x=>({...x,students:Array.isArray(x.students)?x.students:[]}));
+  currentSavedSurveys=(savedRes.data||[]).map(x=>({...x,date:x.survey_date,students:Array.isArray(x.students)?x.students:[]}));
   if(!surveyRes.data){
     const {error}=await withTimeout(supabaseClient.from("survey_settings").upsert({group_id:currentGroupId,title:currentSurvey.title,choices:currentSurvey.choices},{onConflict:"group_id"}));
     if(error) throw error;
@@ -374,7 +374,7 @@ async function saveSurvey(){
   const date=$("dateInput").value,day=$("daySelect").value,g=currentGroup();if(!g)return;
   const resultStudents=currentStudents.map((st,i)=>({number:i+1,name:st.name,score:calculateScore(st),percentage:calculatePercentage(st)}));
   try{
-    const {error}=await withTimeout(supabaseClient.from("saved_surveys").insert({group_id:currentGroupId,title:currentSurvey.title,day,date,students:resultStudents}));if(error)throw error;
+    const {error}=await withTimeout(supabaseClient.from("saved_surveys").insert({group_id:currentGroupId,title:currentSurvey.title,day,survey_date:date,students:resultStudents}));if(error)throw error;
     await loadGroupData();showSavedPage();status("تم حفظ الاستبيان والنتائج ✓","ok");
   }catch(err){showDbError(err)}
 }
