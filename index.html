@@ -1,192 +1,3286 @@
-create table if not exists groups (
-    id uuid primary key default gen_random_uuid(),
-    name text not null,
-    created_at timestamptz default now()
+<!DOCTYPE html>
+
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>نظام درجات الطلاب</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;800&display=swap');
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    min-height:100vh;
+    font-family:"Cairo",Tahoma,Arial,sans-serif;
+    background:
+        radial-gradient(circle at top right,rgba(255,255,255,.08),transparent 35%),
+        linear-gradient(135deg,#063b35,#075c50,#083f39);
+    color:#26332f;
+    padding:10px;
+}
+
+button,input,select{
+    font-family:inherit;
+}
+
+button{
+    border:none;
+    cursor:pointer;
+}
+
+.app{
+    width:100%;
+    max-width:1150px;
+    margin:auto;
+}
+
+.header{
+    background:rgba(255,255,255,.97);
+    border-radius:22px;
+    padding:22px 15px;
+    text-align:center;
+    margin-bottom:10px;
+    box-shadow:0 8px 30px rgba(0,0,0,.18);
+    border-top:5px solid #c9a227;
+}
+
+.header h1{
+    color:#075b4e;
+    font-size:clamp(22px,4vw,34px);
+    margin-bottom:5px;
+    font-weight:800;
+}
+
+.hadith{
+    font-family:"Amiri",serif;
+    color:#9b7612;
+    font-size:clamp(25px,5vw,38px);
+    line-height:1.8;
+    font-weight:bold;
+}
+
+.ornament{
+    color:#c9a227;
+    font-size:21px;
+}
+
+.navbar{
+    background:white;
+    border-radius:16px;
+    padding:7px;
+    margin-bottom:10px;
+    box-shadow:0 5px 20px rgba(0,0,0,.13);
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:6px;
+}
+
+.nav-btn{
+    background:#087f70;
+    color:white;
+    min-height:45px;
+    border-radius:10px;
+    font-size:14px;
+    font-weight:bold;
+    transition:.2s;
+}
+
+.nav-btn:hover,
+.action-btn:hover{
+    transform:translateY(-1px);
+    opacity:.9;
+}
+
+.nav-btn.active{
+    background:#b28b1c;
+}
+
+.page{
+    display:none;
+}
+
+.page.active{
+    display:block;
+}
+
+.date-panel{
+    background:white;
+    border-radius:16px;
+    padding:12px;
+    margin-bottom:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+    flex-wrap:wrap;
+    box-shadow:0 5px 20px rgba(0,0,0,.12);
+}
+
+.date-panel label{
+    color:#075b4e;
+    font-weight:bold;
+}
+
+.date-panel input,
+.date-panel select{
+    border:1px solid #d7dfdc;
+    border-radius:9px;
+    padding:9px 12px;
+    outline:none;
+    background:#f9fbfa;
+}
+
+.panel{
+    background:white;
+    border-radius:18px;
+    padding:17px;
+    margin-bottom:12px;
+    box-shadow:0 6px 22px rgba(0,0,0,.13);
+}
+
+.panel-title{
+    color:#075b4e;
+    font-size:19px;
+    font-weight:800;
+    margin-bottom:13px;
+    padding-bottom:8px;
+    border-bottom:1px solid #e4ebe8;
+}
+
+.controls{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.controls input,
+.controls select{
+    flex:1;
+    min-width:180px;
+    padding:11px 13px;
+    border:1px solid #d5dfdb;
+    border-radius:10px;
+    outline:none;
+    background:#fbfcfc;
+}
+
+.action-btn{
+    background:#087f70;
+    color:white;
+    border-radius:9px;
+    padding:10px 14px;
+    font-weight:bold;
+    font-size:13px;
+    transition:.2s;
+}
+
+.action-btn.gold{
+    background:#b28b1c;
+}
+
+.action-btn.danger{
+    background:#a93434;
+}
+
+.action-btn.light{
+    background:#64736e;
+}
+
+.action-btn.small{
+    padding:7px 10px;
+    font-size:12px;
+}
+
+.group-box{
+    background:#f4f8f6;
+    border:1px solid #dce8e4;
+    border-radius:13px;
+    padding:15px;
+    margin-bottom:12px;
+}
+
+.current-group{
+    color:#075b4e;
+    font-size:18px;
+    font-weight:800;
+    text-align:center;
+}
+
+.survey-editor{
+    background:#f7faf9;
+    border:1px solid #dce8e4;
+    border-radius:14px;
+    padding:15px;
+}
+
+.survey-title-input{
+    width:100%;
+    padding:11px;
+    margin-bottom:12px;
+    border:1px solid #d5dfdb;
+    border-radius:9px;
+    outline:none;
+}
+
+.choice-row{
+    display:flex;
+    gap:7px;
+    margin-bottom:8px;
+}
+
+.choice-row input{
+    border:1px solid #d5dfdb;
+    border-radius:8px;
+    padding:9px;
+    outline:none;
+}
+
+.choice-row input[type="text"]{
+    flex:1;
+    min-width:0;
+}
+
+.choice-row input[type="number"]{
+    width:95px;
+}
+
+.choice-row button{
+    width:38px;
+    border-radius:8px;
+    background:#a93434;
+    color:white;
+}
+
+.students-list{
+    display:grid;
+    gap:10px;
+}
+
+.student-card{
+    border:1px solid #dce7e3;
+    background:#fbfcfc;
+    border-radius:13px;
+    padding:13px;
+}
+
+.student-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:10px;
+}
+
+.student-number{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    background:#087f70;
+    color:white;
+    font-weight:bold;
+    margin-left:6px;
+}
+
+.student-name{
+    color:#075b4e;
+    font-weight:bold;
+    font-size:17px;
+}
+
+.student-choices{
+    display:grid;
+    gap:6px;
+}
+
+.choice{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:white;
+    border:1px solid #e0e7e4;
+    padding:9px;
+    border-radius:8px;
+}
+
+.choice input{
+    width:18px;
+    height:18px;
+}
+
+.choice-text{
+    flex:1;
+}
+
+.choice-score{
+    color:#087f70;
+    font-weight:bold;
+}
+
+.student-score{
+    margin-top:9px;
+    padding:9px;
+    border-radius:8px;
+    background:#e8f4f1;
+    color:#075b4e;
+    text-align:center;
+    font-weight:bold;
+}
+
+.save-area{
+    margin-top:16px;
+    text-align:center;
+}
+
+.save-final{
+    width:100%;
+    max-width:450px;
+    background:#087f70;
+    color:white;
+    padding:14px 20px;
+    border-radius:11px;
+    font-size:16px;
+    font-weight:800;
+}
+
+.result-card{
+    background:white;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 6px 22px rgba(0,0,0,.13);
+    margin-bottom:15px;
+}
+
+.result-head{
+    background:#075b4e;
+    color:white;
+    text-align:center;
+    padding:14px;
+}
+
+.result-head .day{
+    font-size:19px;
+    font-weight:bold;
+}
+
+.result-head .date{
+    font-size:15px;
+}
+
+.result-list{
+    padding:5px 15px;
+}
+
+.result-row{
+    display:grid;
+    grid-template-columns:45px 1fr 90px 100px;
+    align-items:center;
+    gap:8px;
+    padding:12px 5px;
+    border-bottom:1px solid #e5ebe9;
+}
+
+.result-number{
+    color:#087f70;
+    font-weight:bold;
+}
+
+.result-student{
+    font-weight:bold;
+}
+
+.result-score,
+.result-percent{
+    text-align:center;
+    font-weight:bold;
+}
+
+.result-percent{
+    color:#087f70;
+}
+
+.result-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    padding:11px 15px;
+    border-top:1px solid #e3e9e7;
+}
+
+.result-actions .action-btn{
+    flex:1;
+    min-width:70px;
+}
+
+.empty{
+    background:white;
+    border-radius:16px;
+    padding:35px 15px;
+    text-align:center;
+    color:#74817d;
+    box-shadow:0 5px 18px rgba(0,0,0,.1);
+}
+
+.empty-icon{
+    font-size:42px;
+    margin-bottom:7px;
+}
+
+.about{
+    text-align:center;
+    padding:30px 20px;
+}
+
+.about .symbol{
+    color:#c9a227;
+    font-size:35px;
+}
+
+.about h2{
+    color:#075b4e;
+    margin:10px 0;
+}
+
+.about p{
+    color:#66736f;
+    line-height:2;
+    margin:8px 0;
+}
+
+.status{
+    text-align:center;
+    padding:8px;
+    margin-bottom:10px;
+    border-radius:9px;
+    background:#e8f4f1;
+    color:#075b4e;
+    font-weight:bold;
+    font-size:13px;
+}
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    z-index:9999;
+    align-items:center;
+    justify-content:center;
+    padding:15px;
+}
+
+.modal.active{
+    display:flex;
+}
+
+.modal-box{
+    background:white;
+    width:100%;
+    max-width:430px;
+    border-radius:17px;
+    padding:22px;
+    text-align:center;
+    box-shadow:0 15px 45px rgba(0,0,0,.25);
+}
+
+.modal-box h3{
+    color:#075b4e;
+    margin-bottom:12px;
+}
+
+.modal-box input{
+    width:100%;
+    padding:11px;
+    border:1px solid #d5dfdb;
+    border-radius:9px;
+    margin-bottom:15px;
+    outline:none;
+}
+
+.modal-buttons{
+    display:flex;
+    gap:8px;
+}
+
+.modal-buttons button{
+    flex:1;
+    padding:11px;
+    border-radius:9px;
+    font-weight:bold;
+}
+
+.btn-yes{
+    background:#087f70;
+    color:white;
+}
+
+.btn-no{
+    background:#68736f;
+    color:white;
+}
+
+footer{
+    color:rgba(255,255,255,.85);
+    text-align:center;
+    padding:18px 5px;
+    font-size:12px;
+}
+
+@media(max-width:700px){
+
+    body{
+        padding:6px;
+    }
+
+    .navbar{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .date-panel{
+        justify-content:stretch;
+    }
+
+    .date-panel label{
+        width:100%;
+        text-align:center;
+    }
+
+    .date-panel input,
+    .date-panel select{
+        flex:1;
+        min-width:120px;
+    }
+
+    .controls{
+        flex-direction:column;
+    }
+
+    .controls input,
+    .controls select,
+    .controls button{
+        width:100%;
+    }
+
+    .choice-row{
+        flex-wrap:wrap;
+    }
+
+    .choice-row input[type="text"]{
+        width:100%;
+        flex-basis:100%;
+    }
+
+    .choice-row input[type="number"]{
+        flex:1;
+    }
+
+    .result-row{
+        grid-template-columns:32px 1fr 65px 75px;
+        gap:4px;
+        font-size:12px;
+    }
+
+    .result-actions .action-btn{
+        min-width:calc(50% - 6px);
+    }
+}
+
+@media(max-width:430px){
+
+    .result-row{
+        grid-template-columns:28px 1fr 58px 65px;
+        font-size:11px;
+    }
+
+    .result-actions .action-btn{
+        width:100%;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="app">
+
+<header class="header">
+
+```
+<div class="ornament">۞ ✦ ۞</div>
+
+<h1>نظام درجات الطلاب</h1>
+
+<div class="hadith">
+    ﴿ خيركم من تعلم القرآن وعلمه ﴾
+</div>
+
+<div class="ornament">۞ ✦ ۞</div>
+```
+
+</header>
+
+<nav class="navbar">
+
+```
+<button class="nav-btn active"
+        data-page="homePage"
+        onclick="showPage('homePage',this)">
+    الرئيسية
+</button>
+
+<button class="nav-btn"
+        data-page="controlPage"
+        onclick="showPage('controlPage',this)">
+    لوحة التحكم
+</button>
+
+<button class="nav-btn"
+        data-page="savedPage"
+        onclick="showPage('savedPage',this)">
+    الاستبيانات المحفوظة
+</button>
+
+<button class="nav-btn"
+        data-page="aboutPage"
+        onclick="showPage('aboutPage',this)">
+    حول
+</button>
+```
+
+</nav>
+
+<div id="status" class="status">
+    جاري الاتصال بقاعدة البيانات...
+</div>
+
+<div class="date-panel">
+
+```
+<label>بيانات الاستبيان:</label>
+
+<select id="daySelect">
+    <option>السبت</option>
+    <option>الأحد</option>
+    <option>الإثنين</option>
+    <option>الثلاثاء</option>
+    <option>الأربعاء</option>
+    <option>الخميس</option>
+    <option>الجمعة</option>
+</select>
+
+<input type="date" id="dateInput">
+```
+
+</div>
+
+<main id="homePage" class="page active">
+
+```
+<div class="panel">
+
+    <div class="panel-title">
+        📚 المجموعة الحالية
+    </div>
+
+    <div id="currentGroupHome" class="current-group">
+        لم يتم اختيار مجموعة
+    </div>
+
+</div>
+
+<div class="panel">
+
+    <div class="panel-title">
+        📋 الاستبيان الحالي
+    </div>
+
+    <div id="homeSurveyTitle"></div>
+
+</div>
+
+<div class="panel">
+
+    <div class="panel-title">
+        👨‍🎓 الطلاب
+    </div>
+
+    <div id="homeStudents"></div>
+
+</div>
+
+<div class="save-area">
+
+    <button class="save-final"
+            onclick="confirmSaveSurvey()">
+        💾 حفظ الاستبيان والنتائج
+    </button>
+
+</div>
+```
+
+</main>
+
+<section id="controlPage" class="page">
+
+```
+<div class="panel">
+
+    <div class="panel-title">
+        📚 إدارة المجموعات
+    </div>
+
+    <div class="controls">
+
+        <input id="groupName"
+               type="text"
+               placeholder="اسم المجموعة الجديدة">
+
+        <button class="action-btn"
+                onclick="addGroup()">
+            إضافة مجموعة
+        </button>
+
+    </div>
+
+    <div style="height:10px"></div>
+
+    <select id="groupSelect"
+            style="width:100%;padding:11px;border:1px solid #d5dfdb;border-radius:9px;background:white">
+        <option value="">
+            اختر المجموعة
+        </option>
+    </select>
+
+    <div id="groupActions"
+         style="display:none;gap:7px;margin-top:9px">
+
+        <button class="action-btn small"
+                onclick="renameGroup()">
+            تعديل اسم المجموعة
+        </button>
+
+        <button class="action-btn small danger"
+                onclick="deleteGroup()">
+            حذف المجموعة
+        </button>
+
+    </div>
+
+</div>
+
+<div class="panel">
+
+    <div class="panel-title">
+        👨‍🎓 إدارة الطلاب
+    </div>
+
+    <div class="controls">
+
+        <input id="studentName"
+               type="text"
+               placeholder="اكتب اسم الطالب">
+
+        <button class="action-btn"
+                onclick="addStudent()">
+            إضافة طالب
+        </button>
+
+    </div>
+
+    <div style="height:10px"></div>
+
+    <select id="studentSelect"
+            style="width:100%;padding:11px;border:1px solid #d5dfdb;border-radius:9px;background:white">
+        <option value="">
+            اختر طالبًا للتعديل أو الحذف
+        </option>
+    </select>
+
+    <div id="selectedStudentActions"
+         style="display:none;gap:7px;margin-top:9px">
+
+        <button class="action-btn small"
+                onclick="editStudent()">
+            تعديل الاسم
+        </button>
+
+        <button class="action-btn small danger"
+                onclick="deleteStudent()">
+            حذف الطالب
+        </button>
+
+    </div>
+
+</div>
+
+<div class="panel">
+
+    <div class="panel-title">
+        📝 إعداد الاستبيان
+    </div>
+
+    <div class="survey-editor">
+
+        <input id="surveyTitle"
+               class="survey-title-input"
+               placeholder="اسم الاستبيان">
+
+        <div id="choicesEditor"></div>
+
+        <button class="action-btn"
+                onclick="addChoice()">
+            إضافة اختيار
+        </button>
+
+        <button class="action-btn gold"
+                onclick="saveSurveySettings()">
+            حفظ إعداد الاستبيان
+        </button>
+
+    </div>
+
+</div>
+```
+
+</section>
+
+<section id="savedPage" class="page">
+
+```
+<div id="savedResults"></div>
+```
+
+</section>
+
+<section id="aboutPage" class="page">
+
+```
+<div class="panel about">
+
+    <div class="symbol">۞</div>
+
+    <h2>حول النظام</h2>
+
+    <p>
+        نظام احترافي لإدارة مجموعات الطلاب
+        وإعداد الاستبيانات وحفظ النتائج.
+    </p>
+
+    <p>
+        البيانات محفوظة على Supabase
+        ويمكن الوصول إليها من أكثر من جهاز.
+    </p>
+
+    <div class="ornament">
+        ✦ ۞ ✦
+    </div>
+
+    <p>
+        ﴿ وَقُلْ رَبِّ زِدْنِي عِلْمًا ﴾
+    </p>
+
+</div>
+```
+
+</section>
+
+<footer>
+    ﴿ وَقُلْ رَبِّ زِدْنِي عِلْمًا ﴾
+</footer>
+
+</div>
+
+<div id="confirmModal" class="modal">
+
+```
+<div class="modal-box">
+
+    <h3 id="confirmTitle">
+        تأكيد العملية
+    </h3>
+
+    <p id="confirmMessage">
+        هل أنت متأكد؟
+    </p>
+
+    <div class="modal-buttons">
+
+        <button class="btn-yes"
+                id="confirmYes">
+            نعم
+        </button>
+
+        <button class="btn-no"
+                onclick="closeConfirm()">
+            لا
+        </button>
+
+    </div>
+
+</div>
+```
+
+</div>
+
+<div id="inputModal" class="modal">
+
+```
+<div class="modal-box">
+
+    <h3 id="inputTitle">
+        إدخال البيانات
+    </h3>
+
+    <input id="inputModalValue">
+
+    <div class="modal-buttons">
+
+        <button class="btn-yes"
+                id="inputSave">
+            حفظ
+        </button>
+
+        <button class="btn-no"
+                onclick="closeInputModal()">
+            إلغاء
+        </button>
+
+    </div>
+
+</div>
+```
+
+</div>
+
+<script>
+
+/* =====================================================
+   إعداد Supabase
+   ضع بيانات مشروعك هنا
+===================================================== */
+
+const SUPABASE_URL =
+    "ضع_رابط_مشروع_Supabase_هنا";
+
+const SUPABASE_ANON_KEY =
+    "ضع_مفتاح_anon_هنا";
+
+
+const supabaseClient =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
+
+
+/* =====================================================
+   البيانات
+===================================================== */
+
+let groups = [];
+let students = [];
+let survey = {
+    title:"الاستبيان",
+    choices:[
+        {text:"الاختيار الأول",score:1},
+        {text:"الاختيار الثاني",score:2},
+        {text:"الاختيار الثالث",score:3},
+        {text:"الاختيار الرابع",score:4}
+    ]
+};
+
+let savedSurveys = [];
+
+let currentGroupId = null;
+
+let confirmCallback = null;
+let inputCallback = null;
+
+
+/* =====================================================
+   الرسائل
+===================================================== */
+
+function setStatus(message){
+
+    document.getElementById("status").textContent =
+        message;
+
+}
+
+
+/* =====================================================
+   مساعدات
+===================================================== */
+
+function escapeHTML(text){
+
+    return String(text)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+function formatNumber(number){
+
+    return Number(
+        Number(number || 0).toFixed(2)
+    );
+
+}
+
+
+function formatDate(date){
+
+    if(!date) return "";
+
+    const parts =
+        String(date).split("-");
+
+    if(parts.length !== 3)
+        return date;
+
+    return `${parts[2]}/${parts[1]}/${parts[0]}`;
+
+}
+
+
+function todayDate(){
+
+    const d = new Date();
+
+    const y = d.getFullYear();
+
+    const m = String(
+        d.getMonth()+1
+    ).padStart(2,"0");
+
+    const day = String(
+        d.getDate()
+    ).padStart(2,"0");
+
+    return `${y}-${m}-${day}`;
+
+}
+
+
+function setToday(){
+
+    const d = new Date();
+
+    document.getElementById(
+        "dateInput"
+    ).value = todayDate();
+
+    const days = [
+        "الأحد",
+        "الإثنين",
+        "الثلاثاء",
+        "الأربعاء",
+        "الخميس",
+        "الجمعة",
+        "السبت"
+    ];
+
+    document.getElementById(
+        "daySelect"
+    ).value =
+        days[d.getDay()];
+
+}
+
+
+/* =====================================================
+   التنقل
+===================================================== */
+
+function showPage(pageId,button){
+
+    document
+        .querySelectorAll(".page")
+        .forEach(page =>
+            page.classList.remove("active")
+        );
+
+    document
+        .getElementById(pageId)
+        .classList.add("active");
+
+    document
+        .querySelectorAll(".nav-btn")
+        .forEach(btn =>
+            btn.classList.remove("active")
+        );
+
+    if(button)
+        button.classList.add("active");
+
+    if(pageId === "savedPage")
+        renderSavedSurveys();
+
+}
+
+
+/* =====================================================
+   النوافذ
+===================================================== */
+
+function confirmAction(message,callback){
+
+    document.getElementById(
+        "confirmMessage"
+    ).textContent = message;
+
+    confirmCallback = callback;
+
+    document.getElementById(
+        "confirmModal"
+    ).classList.add("active");
+
+    document.getElementById(
+        "confirmYes"
+    ).onclick = function(){
+
+        const cb = confirmCallback;
+
+        closeConfirm();
+
+        if(cb)
+            cb();
+
+    };
+
+}
+
+
+function closeConfirm(){
+
+    document.getElementById(
+        "confirmModal"
+    ).classList.remove("active");
+
+    confirmCallback = null;
+
+}
+
+
+function inputAction(title,value,callback){
+
+    document.getElementById(
+        "inputTitle"
+    ).textContent = title;
+
+    document.getElementById(
+        "inputModalValue"
+    ).value = value || "";
+
+    inputCallback = callback;
+
+    document.getElementById(
+        "inputModal"
+    ).classList.add("active");
+
+    document.getElementById(
+        "inputModalValue"
+    ).focus();
+
+    document.getElementById(
+        "inputSave"
+    ).onclick = function(){
+
+        const value =
+            document.getElementById(
+                "inputModalValue"
+            ).value.trim();
+
+        if(!value){
+            alert("اكتب البيانات أولاً");
+            return;
+        }
+
+        const cb = inputCallback;
+
+        closeInputModal();
+
+        if(cb)
+            cb(value);
+
+    };
+
+}
+
+
+function closeInputModal(){
+
+    document.getElementById(
+        "inputModal"
+    ).classList.remove("active");
+
+    inputCallback = null;
+
+}
+
+
+/* =====================================================
+   المجموعات
+===================================================== */
+
+async function loadGroups(){
+
+    const {data,error} =
+        await supabaseClient
+            .from("groups")
+            .select("*")
+            .order("created_at",{ascending:true});
+
+    if(error){
+
+        console.error(error);
+
+        setStatus(
+            "تعذر الاتصال بقاعدة البيانات"
+        );
+
+        return;
+
+    }
+
+    groups = data || [];
+
+    renderGroups();
+
+}
+
+
+function renderGroups(){
+
+    const select =
+        document.getElementById(
+            "groupSelect"
+        );
+
+    select.innerHTML =
+        `<option value="">
+            اختر المجموعة
+        </option>`;
+
+    groups.forEach(group => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = group.id;
+
+        option.textContent =
+            group.name;
+
+        select.appendChild(option);
+
+    });
+
+    if(currentGroupId){
+
+        select.value =
+            currentGroupId;
+
+        document.getElementById(
+            "groupActions"
+        ).style.display = "flex";
+
+    }
+
+}
+
+
+async function addGroup(){
+
+    const input =
+        document.getElementById(
+            "groupName"
+        );
+
+    const name =
+        input.value.trim();
+
+    if(!name){
+
+        alert("اكتب اسم المجموعة");
+
+        input.focus();
+
+        return;
+
+    }
+
+    const {data,error} =
+        await supabaseClient
+            .from("groups")
+            .insert({
+                name:name
+            })
+            .select()
+            .single();
+
+    if(error){
+
+        alert("حدث خطأ أثناء إضافة المجموعة");
+
+        console.error(error);
+
+        return;
+
+    }
+
+    input.value = "";
+
+    groups.push(data);
+
+    currentGroupId = data.id;
+
+    renderGroups();
+
+    document.getElementById(
+        "groupSelect"
+    ).value = data.id;
+
+    await loadGroupData();
+
+    setStatus(
+        `المجموعة الحالية: ${data.name}`
+    );
+
+}
+
+
+async function renameGroup(){
+
+    if(!currentGroupId)
+        return;
+
+    const group =
+        groups.find(
+            g => g.id === currentGroupId
+        );
+
+    if(!group)
+        return;
+
+    inputAction(
+        "تعديل اسم المجموعة",
+        group.name,
+        async function(newName){
+
+            const {error} =
+                await supabaseClient
+                    .from("groups")
+                    .update({
+                        name:newName
+                    })
+                    .eq("id",currentGroupId);
+
+            if(error){
+
+                alert("تعذر تعديل اسم المجموعة");
+
+                return;
+
+            }
+
+            group.name = newName;
+
+            renderGroups();
+
+            renderHome();
+
+            setStatus(
+                `المجموعة الحالية: ${newName}`
+            );
+
+        }
+    );
+
+}
+
+
+async function deleteGroup(){
+
+    if(!currentGroupId)
+        return;
+
+    const group =
+        groups.find(
+            g => g.id === currentGroupId
+        );
+
+    if(!group)
+        return;
+
+    confirmAction(
+        `هل تريد حذف المجموعة "${group.name}" وكل بياناتها؟`,
+        async function(){
+
+            const {error} =
+                await supabaseClient
+                    .from("groups")
+                    .delete()
+                    .eq("id",currentGroupId);
+
+            if(error){
+
+                alert("تعذر حذف المجموعة");
+
+                return;
+
+            }
+
+            groups =
+                groups.filter(
+                    g => g.id !== currentGroupId
+                );
+
+            currentGroupId = null;
+
+            students = [];
+
+            savedSurveys = [];
+
+            survey = {
+                title:"الاستبيان",
+                choices:[
+                    {text:"الاختيار الأول",score:1},
+                    {text:"الاختيار الثاني",score:2},
+                    {text:"الاختيار الثالث",score:3},
+                    {text:"الاختيار الرابع",score:4}
+                ]
+            };
+
+            renderGroups();
+            renderAll();
+
+            setStatus(
+                "تم حذف المجموعة"
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   اختيار المجموعة
+===================================================== */
+
+document
+    .getElementById("groupSelect")
+    .addEventListener(
+        "change",
+        async function(){
+
+            currentGroupId =
+                this.value || null;
+
+            document.getElementById(
+                "groupActions"
+            ).style.display =
+                currentGroupId
+                    ? "flex"
+                    : "none";
+
+            if(currentGroupId){
+
+                await loadGroupData();
+
+            }else{
+
+                students = [];
+                savedSurveys = [];
+
+                renderAll();
+
+            }
+
+        }
+    );
+
+
+/* =====================================================
+   تحميل بيانات المجموعة
+===================================================== */
+
+async function loadGroupData(){
+
+    if(!currentGroupId)
+        return;
+
+    setStatus(
+        "جاري تحميل بيانات المجموعة..."
+    );
+
+    const [
+        studentsResult,
+        surveyResult,
+        savedResult
+    ] = await Promise.all([
+
+        supabaseClient
+            .from("students")
+            .select("*")
+            .eq("group_id",currentGroupId)
+            .order("created_at",{ascending:true}),
+
+        supabaseClient
+            .from("survey_settings")
+            .select("*")
+            .eq("group_id",currentGroupId)
+            .maybeSingle(),
+
+        supabaseClient
+            .from("saved_surveys")
+            .select("*")
+            .eq("group_id",currentGroupId)
+            .order("created_at",{ascending:false})
+
+    ]);
+
+    if(studentsResult.error){
+        console.error(studentsResult.error);
+    }
+
+    students =
+        studentsResult.data || [];
+
+    if(surveyResult.data){
+
+        survey = {
+            title:surveyResult.data.title,
+            choices:
+                surveyResult.data.choices || []
+        };
+
+    }else{
+
+        await createDefaultSurvey();
+
+    }
+
+    savedSurveys =
+        (savedResult.data || []).map(item => ({
+
+            id:item.id,
+            title:item.title,
+            day:item.day,
+            date:item.survey_date,
+            students:item.students || []
+
+        }));
+
+    renderAll();
+
+    const group =
+        groups.find(
+            g => g.id === currentGroupId
+        );
+
+    setStatus(
+        group
+            ? `المجموعة الحالية: ${group.name}`
+            : "تم تحميل البيانات"
+    );
+
+}
+
+
+/* =====================================================
+   الاستبيان الافتراضي
+===================================================== */
+
+async function createDefaultSurvey(){
+
+    survey = {
+        title:"الاستبيان",
+        choices:[
+            {text:"الاختيار الأول",score:1},
+            {text:"الاختيار الثاني",score:2},
+            {text:"الاختيار الثالث",score:3},
+            {text:"الاختيار الرابع",score:4}
+        ]
+    };
+
+    if(!currentGroupId)
+        return;
+
+    await supabaseClient
+        .from("survey_settings")
+        .insert({
+
+            group_id:currentGroupId,
+
+            title:survey.title,
+
+            choices:survey.choices
+
+        });
+
+}
+
+
+/* =====================================================
+   الطلاب
+===================================================== */
+
+async function addStudent(){
+
+    if(!currentGroupId){
+
+        alert("اختر مجموعة أولاً");
+
+        return;
+
+    }
+
+    const input =
+        document.getElementById(
+            "studentName"
+        );
+
+    const name =
+        input.value.trim();
+
+    if(!name){
+
+        alert("اكتب اسم الطالب");
+
+        return;
+
+    }
+
+    const {data,error} =
+        await supabaseClient
+            .from("students")
+            .insert({
+
+                group_id:currentGroupId,
+
+                name:name
+
+            })
+            .select()
+            .single();
+
+    if(error){
+
+        alert("تعذر إضافة الطالب");
+
+        console.error(error);
+
+        return;
+
+    }
+
+    students.push(data);
+
+    input.value = "";
+
+    renderAll();
+
+}
+
+
+async function editStudent(){
+
+    const id =
+        document.getElementById(
+            "studentSelect"
+        ).value;
+
+    if(!id)
+        return;
+
+    const student =
+        students.find(
+            s => s.id === id
+        );
+
+    if(!student)
+        return;
+
+    inputAction(
+        "تعديل اسم الطالب",
+        student.name,
+        async function(newName){
+
+            const {error} =
+                await supabaseClient
+                    .from("students")
+                    .update({
+                        name:newName
+                    })
+                    .eq("id",id);
+
+            if(error){
+
+                alert("تعذر تعديل اسم الطالب");
+
+                return;
+
+            }
+
+            student.name = newName;
+
+            renderAll();
+
+        }
+    );
+
+}
+
+
+async function deleteStudent(){
+
+    const id =
+        document.getElementById(
+            "studentSelect"
+        ).value;
+
+    if(!id)
+        return;
+
+    const student =
+        students.find(
+            s => s.id === id
+        );
+
+    if(!student)
+        return;
+
+    confirmAction(
+        `هل تريد حذف الطالب "${student.name}"؟`,
+        async function(){
+
+            const {error} =
+                await supabaseClient
+                    .from("students")
+                    .delete()
+                    .eq("id",id);
+
+            if(error){
+
+                alert("تعذر حذف الطالب");
+
+                return;
+
+            }
+
+            students =
+                students.filter(
+                    s => s.id !== id
+                );
+
+            renderAll();
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   قائمة الطلاب
+===================================================== */
+
+function renderStudentSelect(){
+
+    const select =
+        document.getElementById(
+            "studentSelect"
+        );
+
+    select.innerHTML =
+        `<option value="">
+            اختر طالبًا للتعديل أو الحذف
+        </option>`;
+
+    students.forEach(
+        (student,index) => {
+
+            const option =
+                document.createElement("option");
+
+            option.value = student.id;
+
+            option.textContent =
+                `${index+1} - ${student.name}`;
+
+            select.appendChild(option);
+
+        }
+    );
+
+}
+
+
+document
+    .getElementById("studentSelect")
+    .addEventListener(
+        "change",
+        function(){
+
+            document.getElementById(
+                "selectedStudentActions"
+            ).style.display =
+                this.value
+                    ? "flex"
+                    : "none";
+
+        }
+    );
+
+
+/* =====================================================
+   إعداد الاستبيان
+===================================================== */
+
+function renderSurveyEditor(){
+
+    document.getElementById(
+        "surveyTitle"
+    ).value =
+        survey.title;
+
+    const container =
+        document.getElementById(
+            "choicesEditor"
+        );
+
+    container.innerHTML = "";
+
+    survey.choices.forEach(
+        choice =>
+            addChoice(
+                choice.text,
+                choice.score
+            )
+    );
+
+}
+
+
+function addChoice(
+    text="",
+    score=1
+){
+
+    const container =
+        document.getElementById(
+            "choicesEditor"
+        );
+
+    const row =
+        document.createElement("div");
+
+    row.className =
+        "choice-row";
+
+    row.innerHTML = `
+
+        <input
+            type="text"
+            placeholder="نص الاختيار"
+            value="${escapeHTML(text)}">
+
+        <input
+            type="number"
+            min="0"
+            step="0.5"
+            value="${score}">
+
+        <button
+            onclick="this.parentElement.remove()">
+            ×
+        </button>
+    `;
+
+    container.appendChild(row);
+
+}
+
+
+async function saveSurveySettings(){
+
+    if(!currentGroupId){
+
+        alert("اختر مجموعة أولاً");
+
+        return;
+
+    }
+
+    const title =
+        document.getElementById(
+            "surveyTitle"
+        ).value.trim();
+
+    if(!title){
+
+        alert("اكتب اسم الاستبيان");
+
+        return;
+
+    }
+
+    const rows =
+        document.querySelectorAll(
+            "#choicesEditor .choice-row"
+        );
+
+    const choices = [];
+
+    rows.forEach(row => {
+
+        const inputs =
+            row.querySelectorAll("input");
+
+        const text =
+            inputs[0].value.trim();
+
+        const score =
+            Number(inputs[1].value);
+
+        if(text){
+
+            choices.push({
+                text:text,
+                score:isNaN(score)
+                    ? 0
+                    : score
+            });
+
+        }
+
+    });
+
+    if(!choices.length){
+
+        alert(
+            "أضف اختيارًا واحدًا على الأقل"
+        );
+
+        return;
+
+    }
+
+    const {data,error} =
+        await supabaseClient
+            .from("survey_settings")
+            .upsert({
+
+                group_id:currentGroupId,
+
+                title:title,
+
+                choices:choices,
+
+                updated_at:new Date().toISOString()
+
+            },{
+                onConflict:"group_id"
+            })
+            .select()
+            .single();
+
+    if(error){
+
+        console.error(error);
+
+        alert(
+            "تعذر حفظ إعداد الاستبيان"
+        );
+
+        return;
+
+    }
+
+    survey = {
+        title:data.title,
+        choices:data.choices
+    };
+
+    renderAll();
+
+    alert(
+        "تم حفظ إعدادات الاستبيان"
+    );
+
+}
+
+
+/* =====================================================
+   الصفحة الرئيسية
+===================================================== */
+
+function renderHome(){
+
+    const group =
+        groups.find(
+            g => g.id === currentGroupId
+        );
+
+    document.getElementById(
+        "currentGroupHome"
+    ).textContent =
+        group
+            ? group.name
+            : "لم يتم اختيار مجموعة";
+
+    document.getElementById(
+        "homeSurveyTitle"
+    ).innerHTML = `
+
+        <div style="
+            background:#f3f8f6;
+            border:1px solid #dce8e4;
+            padding:13px;
+            border-radius:10px;
+            color:#075b4e;
+            font-weight:bold;
+        ">
+            ${escapeHTML(survey.title)}
+        </div>
+    `;
+
+    const container =
+        document.getElementById(
+            "homeStudents"
+        );
+
+    if(!currentGroupId){
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    📚
+                </div>
+
+                اختر مجموعة من لوحة التحكم
+
+            </div>
+        `;
+
+        return;
+
+    }
+
+    if(!students.length){
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    👨‍🎓
+                </div>
+
+                لا يوجد طلاب في هذه المجموعة
+
+            </div>
+        `;
+
+        return;
+
+    }
+
+    container.innerHTML = "";
+
+    students.forEach(
+        (student,index) => {
+
+            const card =
+                document.createElement("div");
+
+            card.className =
+                "student-card";
+
+            let choicesHTML = "";
+
+            survey.choices.forEach(
+                (choice,choiceIndex) => {
+
+                    const selected =
+                        student._answers || [];
+
+                    const checked =
+                        selected.includes(
+                            choiceIndex
+                        );
+
+                    choicesHTML += `
+
+                        <label class="choice">
+
+                            <input
+                                type="checkbox"
+                                ${checked ? "checked" : ""}
+                                onchange="
+                                    setChoice(
+                                        '${student.id}',
+                                        ${choiceIndex}
+                                    )
+                                ">
+
+                            <span class="choice-text">
+                                ${escapeHTML(choice.text)}
+                            </span>
+
+                            <span class="choice-score">
+                                ${choice.score}
+                            </span>
+
+                        </label>
+                    `;
+
+                }
+            );
+
+            const score =
+                calculateScore(student);
+
+            const percentage =
+                calculatePercentage(student);
+
+            card.innerHTML = `
+
+                <div class="student-header">
+
+                    <div>
+
+                        <span class="student-number">
+                            ${index+1}
+                        </span>
+
+                        <span class="student-name">
+                            ${escapeHTML(student.name)}
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="student-choices">
+                    ${choicesHTML}
+                </div>
+
+                <div class="student-score">
+
+                    النتيجة:
+                    ${formatNumber(score)}
+                    —
+                    ${formatNumber(percentage)}%
+
+                </div>
+
+            `;
+
+            container.appendChild(card);
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   الاختيارات
+===================================================== */
+
+function setChoice(studentId,choiceIndex){
+
+    const student =
+        students.find(
+            s => s.id === studentId
+        );
+
+    if(!student)
+        return;
+
+    if(!student._answers)
+        student._answers = [];
+
+    const index =
+        student._answers.indexOf(
+            choiceIndex
+        );
+
+    if(index === -1){
+
+        student._answers.push(
+            choiceIndex
+        );
+
+    }else{
+
+        student._answers.splice(
+            index,
+            1
+        );
+
+    }
+
+    renderHome();
+
+}
+
+
+/* =====================================================
+   حساب النتيجة
+===================================================== */
+
+function calculateScore(student){
+
+    let score = 0;
+
+    const selected =
+        student._answers || [];
+
+    selected.forEach(
+        index => {
+
+            const choice =
+                survey.choices[index];
+
+            if(choice){
+
+                score +=
+                    Number(choice.score) || 0;
+
+            }
+
+        }
+    );
+
+    return score;
+
+}
+
+
+function getMaxScore(){
+
+    return survey.choices.reduce(
+        (sum,choice) =>
+            sum +
+            (Number(choice.score) || 0),
+        0
+    );
+
+}
+
+
+function calculatePercentage(student){
+
+    const max =
+        getMaxScore();
+
+    if(max <= 0)
+        return 0;
+
+    return (
+        calculateScore(student) /
+        max
+    ) * 100;
+
+}
+
+
+/* =====================================================
+   حفظ الاستبيان
+===================================================== */
+
+async function confirmSaveSurvey(){
+
+    if(!currentGroupId){
+
+        alert("اختر مجموعة أولاً");
+
+        return;
+
+    }
+
+    if(!students.length){
+
+        alert(
+            "لا يمكن حفظ الاستبيان بدون طلاب"
+        );
+
+        return;
+
+    }
+
+    const date =
+        document.getElementById(
+            "dateInput"
+        ).value;
+
+    if(!date){
+
+        alert("اختر التاريخ");
+
+        return;
+
+    }
+
+    confirmAction(
+        "هل تريد حفظ الاستبيان والنتائج الحالية؟",
+        async function(){
+
+            await saveSurvey();
+
+        }
+    );
+
+}
+
+
+async function saveSurvey(){
+
+    const day =
+        document.getElementById(
+            "daySelect"
+        ).value;
+
+    const date =
+        document.getElementById(
+            "dateInput"
+        ).value;
+
+    const resultStudents =
+        students.map(
+            (student,index) => ({
+
+                number:index+1,
+
+                name:student.name,
+
+                score:
+                    calculateScore(student),
+
+                percentage:
+                    calculatePercentage(student)
+
+            })
+        );
+
+    const {data,error} =
+        await supabaseClient
+            .from("saved_surveys")
+            .insert({
+
+                group_id:currentGroupId,
+
+                title:survey.title,
+
+                day:day,
+
+                survey_date:date,
+
+                students:resultStudents
+
+            })
+            .select()
+            .single();
+
+    if(error){
+
+        console.error(error);
+
+        alert(
+            "تعذر حفظ الاستبيان"
+        );
+
+        return;
+
+    }
+
+    savedSurveys.unshift({
+
+        id:data.id,
+
+        title:data.title,
+
+        day:data.day,
+
+        date:data.survey_date,
+
+        students:data.students
+
+    });
+
+    alert(
+        "تم حفظ الاستبيان بنجاح"
+    );
+
+    showSavedPage();
+
+}
+
+
+/* =====================================================
+   عرض المحفوظ
+===================================================== */
+
+function showSavedPage(){
+
+    const button =
+        document.querySelector(
+            '[data-page="savedPage"]'
+        );
+
+    showPage(
+        "savedPage",
+        button
+    );
+
+}
+
+
+function renderSavedSurveys(){
+
+    const container =
+        document.getElementById(
+            "savedResults"
+        );
+
+    if(!currentGroupId){
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    📚
+                </div>
+
+                اختر مجموعة أولاً
+
+            </div>
+        `;
+
+        return;
+
+    }
+
+    if(!savedSurveys.length){
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    📂
+                </div>
+
+                لا توجد استبيانات محفوظة
+
+            </div>
+        `;
+
+        return;
+
+    }
+
+    container.innerHTML = "";
+
+    savedSurveys.forEach(item => {
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "result-card";
+
+        let rows = "";
+
+        item.students.forEach(student => {
+
+            rows += `
+
+                <div class="result-row">
+
+                    <div class="result-number">
+                        ${student.number}
+                    </div>
+
+                    <div class="result-student">
+                        ${escapeHTML(student.name)}
+                    </div>
+
+                    <div class="result-score">
+                        ${formatNumber(student.score)}
+                    </div>
+
+                    <div class="result-percent">
+                        ${formatNumber(student.percentage)}%
+                    </div>
+
+                </div>
+            `;
+
+        });
+
+        card.innerHTML = `
+
+            <div class="result-head">
+
+                <div class="day">
+                    ${escapeHTML(item.day)}
+                </div>
+
+                <div class="date">
+                    ${formatDate(item.date)}
+                </div>
+
+            </div>
+
+            <div class="result-list">
+
+                ${rows}
+
+            </div>
+
+            <div class="result-actions">
+
+                <button class="action-btn small"
+                        onclick="copyResult('${item.id}')">
+                    نسخ
+                </button>
+
+                <button class="action-btn small"
+                        onclick="shareWhatsApp('${item.id}')">
+                    واتساب
+                </button>
+
+                <button class="action-btn small"
+                        onclick="exportText('${item.id}')">
+                    TXT
+                </button>
+
+                <button class="action-btn small"
+                        onclick="exportExcel('${item.id}')">
+                    Excel
+                </button>
+
+                <button class="action-btn small"
+                        onclick="exportPDF('${item.id}')">
+                    PDF
+                </button>
+
+                <button class="action-btn small danger"
+                        onclick="deleteSaved('${item.id}')">
+                    حذف
+                </button>
+
+            </div>
+
+        `;
+
+        container.appendChild(card);
+
+    });
+
+}
+
+
+/* =====================================================
+   نص النتيجة
+===================================================== */
+
+function makeResultText(item){
+
+    let text =
+        `${item.day} - ${formatDate(item.date)}\n\n`;
+
+    item.students.forEach(student => {
+
+        text +=
+            `${student.number}. ${student.name} - ` +
+            `${formatNumber(student.score)} - ` +
+            `${formatNumber(student.percentage)}%\n`;
+
+    });
+
+    return text.trim();
+
+}
+
+
+/* =====================================================
+   نسخ
+===================================================== */
+
+async function copyResult(id){
+
+    const item =
+        savedSurveys.find(
+            s => s.id === id
+        );
+
+    if(!item)
+        return;
+
+    const text =
+        makeResultText(item);
+
+    try{
+
+        await navigator.clipboard.writeText(
+            text
+        );
+
+        alert("تم نسخ النتيجة");
+
+    }catch(e){
+
+        const textarea =
+            document.createElement("textarea");
+
+        textarea.value = text;
+
+        document.body.appendChild(
+            textarea
+        );
+
+        textarea.select();
+
+        document.execCommand("copy");
+
+        textarea.remove();
+
+        alert("تم نسخ النتيجة");
+
+    }
+
+}
+
+
+/* =====================================================
+   واتساب
+===================================================== */
+
+function shareWhatsApp(id){
+
+    const item =
+        savedSurveys.find(
+            s => s.id === id
+        );
+
+    if(!item)
+        return;
+
+    const text =
+        makeResultText(item);
+
+    const url =
+        "https://wa.me/?text=" +
+        encodeURIComponent(text);
+
+    window.open(
+        url,
+        "_blank"
+    );
+
+}
+
+
+/* =====================================================
+   TXT
+===================================================== */
+
+function exportText(id){
+
+    const item =
+        savedSurveys.find(
+            s => s.id === id
+        );
+
+    if(!item)
+        return;
+
+    const blob =
+        new Blob(
+            [makeResultText(item)],
+            {
+                type:
+                    "text/plain;charset=utf-8"
+            }
+        );
+
+    downloadBlob(
+        blob,
+        `نتيجة-${item.date}.txt`
+    );
+
+}
+
+
+/* =====================================================
+   Excel
+===================================================== */
+
+function exportExcel(id){
+
+    const item =
+        savedSurveys.find(
+            s => s.id === id
+        );
+
+    if(!item)
+        return;
+
+    if(typeof XLSX === "undefined"){
+
+        alert(
+            "مكتبة Excel غير متاحة"
+        );
+
+        return;
+
+    }
+
+    const data = [
+
+        ["اليوم",item.day],
+
+        ["التاريخ",formatDate(item.date)],
+
+        [],
+
+        [
+            "رقم",
+            "اسم الطالب",
+            "النتيجة",
+            "النسبة المئوية"
+        ]
+
+    ];
+
+    item.students.forEach(student => {
+
+        data.push([
+
+            student.number,
+
+            student.name,
+
+            student.score,
+
+            Number(
+                student.percentage.toFixed(2)
+            )
+
+        ]);
+
+    });
+
+    const worksheet =
+        XLSX.utils.aoa_to_sheet(data);
+
+    const workbook =
+        XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(
+        workbook,
+        worksheet,
+        "النتائج"
+    );
+
+    XLSX.writeFile(
+        workbook,
+        `نتيجة-${item.date}.xlsx`
+    );
+
+}
+
+
+/* =====================================================
+   PDF
+===================================================== */
+
+function exportPDF(id){
+
+    const item =
+        savedSurveys.find(
+            s => s.id === id
+        );
+
+    if(!item)
+        return;
+
+    const rows =
+        item.students.map(
+            student => `
+
+                <tr>
+
+                    <td>${student.number}</td>
+
+                    <td>
+                        ${escapeHTML(student.name)}
+                    </td>
+
+                    <td>
+                        ${formatNumber(student.score)}
+                    </td>
+
+                    <td>
+                        ${formatNumber(student.percentage)}%
+                    </td>
+
+                </tr>
+
+            `
+        ).join("");
+
+    const win =
+        window.open(
+            "",
+            "_blank"
+        );
+
+    if(!win){
+
+        alert(
+            "اسمح للنوافذ المنبثقة من الموقع"
+        );
+
+        return;
+
+    }
+
+    win.document.write(`
+
+        <!DOCTYPE html>
+
+        <html lang="ar" dir="rtl">
+
+        <head>
+
+            <meta charset="UTF-8">
+
+            <title>
+                نتيجة الاستبيان
+            </title>
+
+            <style>
+
+                body{
+                    font-family:
+                        Arial,Tahoma,sans-serif;
+                    direction:rtl;
+                    padding:30px;
+                }
+
+                h1{
+                    text-align:center;
+                    color:#075b4e;
+                }
+
+                .info{
+                    text-align:center;
+                    margin:15px 0 25px;
+                    font-size:18px;
+                }
+
+                table{
+                    width:100%;
+                    border-collapse:collapse;
+                }
+
+                th,td{
+                    border:1px solid #999;
+                    padding:12px;
+                    text-align:center;
+                }
+
+                th{
+                    background:#075b4e;
+                    color:white;
+                }
+
+            </style>
+
+```
+    </head>
+
+    <body>
+
+        <h1>
+            ${escapeHTML(item.title)}
+        </h1>
+
+        <div class="info">
+
+            ${escapeHTML(item.day)}
+            -
+            ${formatDate(item.date)}
+
+        </div>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>رقم</th>
+                    <th>اسم الطالب</th>
+                    <th>النتيجة</th>
+                    <th>النسبة المئوية</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                ${rows}
+
+            </tbody>
+
+        </table>
+
+        <script>
+
+            window.onload =
+                function(){
+
+                    window.print();
+
+                };
+
+        <\/script>
+
+    </body>
+
+    </html>
+
+`);
+
+win.document.close();
+```
+
+}
+
+/* =====================================================
+حذف استبيان محفوظ
+===================================================== */
+
+function deleteSaved(id){
+
+```
+const item =
+    savedSurveys.find(
+        s => s.id === id
+    );
+
+if(!item)
+    return;
+
+confirmAction(
+    `هل تريد حذف الاستبيان بتاريخ ${formatDate(item.date)}؟`,
+    async function(){
+
+        const {error} =
+            await supabaseClient
+                .from("saved_surveys")
+                .delete()
+                .eq("id",id);
+
+        if(error){
+
+            alert(
+                "تعذر حذف الاستبيان"
+            );
+
+            return;
+
+        }
+
+        savedSurveys =
+            savedSurveys.filter(
+                s => s.id !== id
+            );
+
+        renderSavedSurveys();
+
+    }
 );
+```
 
-create table if not exists students (
-    id uuid primary key default gen_random_uuid(),
-    group_id uuid not null references groups(id) on delete cascade,
-    name text not null,
-    created_at timestamptz default now()
+}
+
+/* =====================================================
+تحميل ملف
+===================================================== */
+
+function downloadBlob(blob,filename){
+
+```
+const url =
+    URL.createObjectURL(blob);
+
+const link =
+    document.createElement("a");
+
+link.href = url;
+
+link.download = filename;
+
+document.body.appendChild(link);
+
+link.click();
+
+link.remove();
+
+URL.revokeObjectURL(url);
+```
+
+}
+
+/* =====================================================
+إعادة الرسم
+===================================================== */
+
+function renderAll(){
+
+```
+renderGroups();
+
+renderStudentSelect();
+
+renderSurveyEditor();
+
+renderHome();
+
+if(
+    document.getElementById(
+        "savedPage"
+    ).classList.contains("active")
+){
+
+    renderSavedSurveys();
+
+}
+```
+
+}
+
+/* =====================================================
+Realtime
+===================================================== */
+
+function setupRealtime(){
+
+```
+supabaseClient
+    .channel("database-changes")
+
+    .on(
+        "postgres_changes",
+        {
+            event:"*",
+            schema:"public",
+            table:"groups"
+        },
+        async function(){
+
+            await loadGroups();
+
+        }
+    )
+
+    .on(
+        "postgres_changes",
+        {
+            event:"*",
+            schema:"public",
+            table:"students"
+        },
+        async function(payload){
+
+            if(
+                payload.new &&
+                payload.new.group_id !== currentGroupId &&
+                payload.old &&
+                payload.old.group_id !== currentGroupId
+            ){
+                return;
+            }
+
+            if(currentGroupId)
+                await loadGroupData();
+
+        }
+    )
+
+    .on(
+        "postgres_changes",
+        {
+            event:"*",
+            schema:"public",
+            table:"survey_settings"
+        },
+        async function(payload){
+
+            if(
+                payload.new &&
+                payload.new.group_id !== currentGroupId
+            ){
+                return;
+            }
+
+            if(currentGroupId)
+                await loadGroupData();
+
+        }
+    )
+
+    .on(
+        "postgres_changes",
+        {
+            event:"*",
+            schema:"public",
+            table:"saved_surveys"
+        },
+        async function(payload){
+
+            if(
+                payload.new &&
+                payload.new.group_id !== currentGroupId
+            ){
+                return;
+            }
+
+            if(currentGroupId)
+                await loadGroupData();
+
+        }
+    )
+
+    .subscribe(function(status){
+
+        if(status === "SUBSCRIBED"){
+
+            setStatus(
+                "متصل بقاعدة البيانات ✓"
+            );
+
+        }
+
+    });
+```
+
+}
+
+/* =====================================================
+Enter
+===================================================== */
+
+document
+.getElementById("studentName")
+.addEventListener(
+"keydown",
+function(event){
+
+```
+        if(event.key === "Enter")
+            addStudent();
+
+    }
 );
+```
 
-create table if not exists survey_settings (
-    id uuid primary key default gen_random_uuid(),
-    group_id uuid unique not null references groups(id) on delete cascade,
-    title text not null default 'الاستبيان',
-    choices jsonb not null default '[]'::jsonb,
-    updated_at timestamptz default now()
+document
+.getElementById("groupName")
+.addEventListener(
+"keydown",
+function(event){
+
+```
+        if(event.key === "Enter")
+            addGroup();
+
+    }
 );
+```
 
-create table if not exists saved_surveys (
-    id uuid primary key default gen_random_uuid(),
-    group_id uuid not null references groups(id) on delete cascade,
-    title text not null,
-    day text not null,
-    survey_date date not null,
-    students jsonb not null default '[]'::jsonb,
-    created_at timestamptz default now()
-);
+/* =====================================================
+تشغيل
+===================================================== */
 
+async function init(){
 
-alter table groups enable row level security;
-alter table students enable row level security;
-alter table survey_settings enable row level security;
-alter table saved_surveys enable row level security;
+```
+setToday();
 
+await loadGroups();
 
-drop policy if exists "groups_select" on groups;
-drop policy if exists "groups_insert" on groups;
-drop policy if exists "groups_update" on groups;
-drop policy if exists "groups_delete" on groups;
+if(groups.length){
 
-create policy "groups_select"
-on groups for select
-to anon, authenticated
-using (true);
+    currentGroupId =
+        groups[0].id;
 
-create policy "groups_insert"
-on groups for insert
-to anon, authenticated
-with check (true);
+    document.getElementById(
+        "groupSelect"
+    ).value =
+        currentGroupId;
 
-create policy "groups_update"
-on groups for update
-to anon, authenticated
-using (true)
-with check (true);
+    document.getElementById(
+        "groupActions"
+    ).style.display =
+        "flex";
 
-create policy "groups_delete"
-on groups for delete
-to anon, authenticated
-using (true);
+    await loadGroupData();
 
+}else{
 
-drop policy if exists "students_select" on students;
-drop policy if exists "students_insert" on students;
-drop policy if exists "students_update" on students;
-drop policy if exists "students_delete" on students;
+    renderAll();
 
-create policy "students_select"
-on students for select
-to anon, authenticated
-using (true);
+    setStatus(
+        "أنشئ أول مجموعة من لوحة التحكم"
+    );
 
-create policy "students_insert"
-on students for insert
-to anon, authenticated
-with check (true);
+}
 
-create policy "students_update"
-on students for update
-to anon, authenticated
-using (true)
-with check (true);
+setupRealtime();
+```
 
-create policy "students_delete"
-on students for delete
-to anon, authenticated
-using (true);
+}
 
+init();
 
-drop policy if exists "survey_settings_select" on survey_settings;
-drop policy if exists "survey_settings_insert" on survey_settings;
-drop policy if exists "survey_settings_update" on survey_settings;
-drop policy if exists "survey_settings_delete" on survey_settings;
+</script>
 
-create policy "survey_settings_select"
-on survey_settings for select
-to anon, authenticated
-using (true);
-
-create policy "survey_settings_insert"
-on survey_settings for insert
-to anon, authenticated
-with check (true);
-
-create policy "survey_settings_update"
-on survey_settings for update
-to anon, authenticated
-using (true)
-with check (true);
-
-create policy "survey_settings_delete"
-on survey_settings for delete
-to anon, authenticated
-using (true);
-
-
-drop policy if exists "saved_surveys_select" on saved_surveys;
-drop policy if exists "saved_surveys_insert" on saved_surveys;
-drop policy if exists "saved_surveys_update" on saved_surveys;
-drop policy if exists "saved_surveys_delete" on saved_surveys;
-
-create policy "saved_surveys_select"
-on saved_surveys for select
-to anon, authenticated
-using (true);
-
-create policy "saved_surveys_insert"
-on saved_surveys for insert
-to anon, authenticated
-with check (true);
-
-create policy "saved_surveys_update"
-on saved_surveys for update
-to anon, authenticated
-using (true)
-with check (true);
-
-create policy "saved_surveys_delete"
-on saved_surveys for delete
-to anon, authenticated
-using (true);
-
-
-alter table groups replica identity full;
-alter table students replica identity full;
-alter table survey_settings replica identity full;
-alter table saved_surveys replica identity full;
-
-
-do $$
-begin
-
-    if not exists (
-        select 1
-        from pg_publication_tables
-        where pubname = 'supabase_realtime'
-        and tablename = 'groups'
-    ) then
-        alter publication supabase_realtime add table groups;
-    end if;
-
-    if not exists (
-        select 1
-        from pg_publication_tables
-        where pubname = 'supabase_realtime'
-        and tablename = 'students'
-    ) then
-        alter publication supabase_realtime add table students;
-    end if;
-
-    if not exists (
-        select 1
-        from pg_publication_tables
-        where pubname = 'supabase_realtime'
-        and tablename = 'survey_settings'
-    ) then
-        alter publication supabase_realtime add table survey_settings;
-    end if;
-
-    if not exists (
-        select 1
-        from pg_publication_tables
-        where pubname = 'supabase_realtime'
-        and tablename = 'saved_surveys'
-    ) then
-        alter publication supabase_realtime add table saved_surveys;
-    end if;
-
-end $$;
+</body>
+</html>
