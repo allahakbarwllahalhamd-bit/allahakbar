@@ -31,7 +31,7 @@ button,input,select{font-family:inherit} button{border:0;cursor:pointer}
 .choice-row{display:flex;gap:6px;margin-bottom:7px}.choice-row input{border:1px solid #d5dfdb;border-radius:8px;padding:9px;outline:none}.choice-row input[type=text]{flex:1;min-width:0}.choice-row input[type=number]{width:95px}.choice-row button{width:38px;border-radius:8px;background:#a93434;color:#fff}
 .students-list{display:grid;gap:9px}.student-card{border:1px solid #dce7e3;background:#fbfcfc;border-radius:13px;padding:12px}.student-header{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:9px}.student-number{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:#087f70;color:#fff;font-weight:800;margin-left:6px}.student-name{color:#075b4e;font-weight:800;font-size:16px}.student-choices{display:grid;gap:5px}.choice{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #e0e7e4;padding:8px;border-radius:8px}.choice input{width:18px;height:18px}.choice-text{flex:1}.choice-score{color:#087f70;font-weight:800;white-space:nowrap}.student-score{margin-top:8px;padding:8px;border-radius:8px;background:#e8f4f1;color:#075b4e;text-align:center;font-weight:800}
 .save-area{text-align:center;margin:16px 0}.save-final{width:100%;max-width:460px;padding:14px;font-size:16px}
-.result-card{background:#fff;border-radius:17px;overflow:hidden;box-shadow:0 6px 22px rgba(0,0,0,.13);margin-bottom:12px}.result-head{background:#075b4e;color:#fff;text-align:center;padding:13px}.result-head .day{font-size:18px;font-weight:800}.result-head .date{font-size:14px}.result-list{padding:4px 14px}.result-row{display:grid;grid-template-columns:42px 1fr 85px 95px;align-items:center;gap:6px;padding:11px 3px;border-bottom:1px solid #e5ebe9}.result-row:last-child{border-bottom:0}.result-number{color:#087f70;font-weight:800}.result-student{font-weight:800}.result-score,.result-percent{text-align:center;font-weight:800}.result-percent{color:#087f70}.result-actions{display:flex;flex-wrap:wrap;gap:5px;padding:10px 14px;border-top:1px solid #e3e9e7}.result-actions .action-btn{flex:1;min-width:75px}
+.result-card{background:#fff;border-radius:17px;overflow:hidden;box-shadow:0 6px 22px rgba(0,0,0,.13);margin-bottom:12px}.result-card.collapsed .result-body,.result-card.collapsed .result-actions{display:none}.result-card .result-toggle{width:100%;text-align:right;background:#fff;color:#075b4e;padding:12px 14px;border:0;font:inherit;font-weight:800;cursor:pointer}.result-card.collapsed .result-toggle{display:block}.result-summary{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.result-summary .arrow{font-size:16px}.result-body{display:block}.result-head{background:#075b4e;color:#fff;text-align:center;padding:13px}.result-head .day{font-size:18px;font-weight:800}.result-head .date{font-size:14px}.result-list{padding:4px 14px}.result-row{display:grid;grid-template-columns:42px 1fr 85px 95px;align-items:center;gap:6px;padding:11px 3px;border-bottom:1px solid #e5ebe9}.result-row:last-child{border-bottom:0}.result-number{color:#087f70;font-weight:800}.result-student{font-weight:800}.result-score,.result-percent{text-align:center;font-weight:800}.result-percent{color:#087f70}.result-actions{display:flex;flex-wrap:wrap;gap:5px;padding:10px 14px;border-top:1px solid #e3e9e7}.result-actions .action-btn{flex:1;min-width:75px}
 .empty{background:#fff;border-radius:15px;padding:32px 14px;text-align:center;color:#74817d;box-shadow:0 5px 18px rgba(0,0,0,.1)}.empty-icon{font-size:40px;margin-bottom:6px}
 .about{text-align:center;padding:28px 18px}.about .symbol{color:#c9a227;font-size:35px}.about h2{color:#075b4e;margin:9px 0}.about p{color:#66736f;line-height:2}
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;align-items:center;justify-content:center;padding:14px}.modal.active{display:flex}.modal-box{background:#fff;width:100%;max-width:430px;border-radius:16px;padding:20px;text-align:center;box-shadow:0 15px 45px rgba(0,0,0,.25)}.modal-box h3{color:#075b4e;margin-bottom:9px}.modal-box p{color:#68736f;margin-bottom:15px}.modal-buttons{display:flex;gap:7px}.modal-buttons button{flex:1;padding:10px;border-radius:9px;font-weight:800}.btn-yes{background:#087f70;color:#fff}.btn-no{background:#68736f;color:#fff}
@@ -55,12 +55,6 @@ footer{color:rgba(255,255,255,.85);text-align:center;padding:14px 5px;font-size:
 <button class="nav-btn" data-page="savedPage" onclick="showPage('savedPage',this)">الاستبيانات المحفوظة</button>
 <button class="nav-btn" data-page="aboutPage" onclick="showPage('aboutPage',this)">حول</button>
 </nav>
-<div class="date-panel">
-<label>بيانات الاستبيان:</label>
-<select id="daySelect"><option>السبت</option><option>الأحد</option><option>الإثنين</option><option>الثلاثاء</option><option>الأربعاء</option><option>الخميس</option><option>الجمعة</option></select>
-<input type="date" id="dateInput">
-</div>
-
 <main id="homePage" class="page active">
 <div class="panel"><div class="panel-title">📚 المجموعة الحالية</div><div id="currentGroupHome" class="group-current">جارٍ التحميل...</div></div>
 <div class="panel"><div class="panel-title">📋 الاستبيان الحالي</div><div id="homeSurveyTitle"></div></div>
@@ -90,7 +84,7 @@ footer{color:rgba(255,255,255,.85);text-align:center;padding:14px 5px;font-size:
 </section>
 
 <section id="savedPage" class="page"><div id="savedResults"></div></section>
-<section id="aboutPage" class="page"><div class="panel about"><div class="symbol">۞</div><h2>حول النظام</h2><p>نظام احترافي لإدارة مجموعات الطلاب وإعداد الاستبيانات وحفظ النتائج.</p><p>البيانات محفوظة على Supabase ويمكن الوصول إليها من أكثر من جهاز.</p><div class="ornament">✦ ۞ ✦</div><p>﴿ وَقُلْ رَبِّ زِدْنِي عِلْمًا ﴾</p></div></section>
+<section id="aboutPage" class="page"><div class="panel about"><div class="symbol">۞</div><h2>حول النظام</h2><p>نظام احترافي لإدارة مجموعات الطلاب وإعداد الاستبيانات وحفظ النتائج.</p><p><strong>المعلمة:</strong> رجاء محمد</p><p><strong>مطور الموقع:</strong> محمد ابراهيم</p><p>البيانات محفوظة على Supabase ويمكن الوصول إليها من أكثر من جهاز.</p><div class="ornament">✦ ۞ ✦</div><p>﴿ وَقُلْ رَبِّ زِدْنِي عِلْمًا ﴾</p></div></section>
 <footer>﴿ وَقُلْ رَبِّ زِدْنِي عِلْمًا ﴾</footer>
 </div>
 
@@ -169,12 +163,11 @@ function showPage(pageId,button){
 /* =========================
    اليوم والتاريخ
    ========================= */
-function setToday(){
+function getTodayInfo(){
   const now=new Date();
   const y=now.getFullYear(),m=String(now.getMonth()+1).padStart(2,"0"),d=String(now.getDate()).padStart(2,"0");
-  $("dateInput").value=`${y}-${m}-${d}`;
   const days=["الأحد","الإثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
-  $("daySelect").value=days[now.getDay()];
+  return {date:`${y}-${m}-${d}`,day:days[now.getDay()]};
 }
 
 /* =========================
@@ -210,16 +203,16 @@ async function loadGroups(){
 async function loadGroupData(){
   if(!currentGroupId)return;
   const [studentsRes,surveyRes,savedRes]=await Promise.all([
-    withTimeout(supabaseClient.from("students").select("id,group_id,name,answers").eq("group_id",currentGroupId).order("id",{ascending:true})),
+    withTimeout(supabaseClient.from("students").select("id,group_id,name,answers,created_at").eq("group_id",currentGroupId).order("created_at",{ascending:false})),
     withTimeout(supabaseClient.from("survey_settings").select("group_id,title,choices").eq("group_id",currentGroupId).maybeSingle()),
-    withTimeout(supabaseClient.from("saved_surveys").select("id,group_id,title,day,survey_date,students,created_at").eq("group_id",currentGroupId).order("created_at",{ascending:false}))
+    withTimeout(supabaseClient.from("saved_surveys").select("id,group_id,title,day,date,students,created_at").eq("group_id",currentGroupId).order("created_at",{ascending:false}))
   ]);
   if(studentsRes.error)throw studentsRes.error;
   if(surveyRes.error)throw surveyRes.error;
   if(savedRes.error)throw savedRes.error;
   currentStudents=(studentsRes.data||[]).map(s=>({...s,answers:Array.isArray(s.answers)?s.answers:[]}));
   currentSurvey=normalizeSurvey(surveyRes.data);
-  currentSavedSurveys=(savedRes.data||[]).map(x=>({...x,date:x.survey_date,students:Array.isArray(x.students)?x.students:[]}));
+  currentSavedSurveys=(savedRes.data||[]).map(x=>({...x,students:Array.isArray(x.students)?x.students:[]}));
   if(!surveyRes.data){
     const {error}=await withTimeout(supabaseClient.from("survey_settings").upsert({group_id:currentGroupId,title:currentSurvey.title,choices:currentSurvey.choices},{onConflict:"group_id"}));
     if(error) throw error;
@@ -276,10 +269,17 @@ function confirmDeleteGroup(){
    الطلاب
    ========================= */
 async function addStudent(){
-  const name=$("studentName").value.trim();if(!name){alert("اكتب اسم الطالب أولاً");return}
+  const name=$("studentName").value.trim();
+  if(!name){alert("اكتب اسم الطالب أولاً");return}
   if(!currentGroupId){alert("اختر مجموعة أولاً");return}
+  const duplicate=currentStudents.some(s=>String(s.name||"").trim().toLowerCase()===name.toLowerCase());
+  if(duplicate){alert("لا يمكن إضافة اسم مكرر داخل المجموعة الحالية.");return}
   try{
-    const {error}=await withTimeout(supabaseClient.from("students").insert({group_id:currentGroupId,name,answers:[]}));if(error)throw error;
+    const {error}=await withTimeout(supabaseClient.from("students").insert({group_id:currentGroupId,name,answers:[]}));
+    if(error){
+      if(String(error.message||"").toLowerCase().includes("duplicate")||String(error.code||"")==="23505"){alert("هذا الاسم موجود بالفعل في المجموعة.");return}
+      throw error;
+    }
     $("studentName").value="";await loadGroupData();status("تمت إضافة الطالب ✓","ok");
   }catch(err){showDbError(err)}
 }
@@ -293,6 +293,8 @@ function selectedStudent(){return currentStudents.find(s=>String(s.id)===String(
 function editStudent(){
   const st=selectedStudent();if(!st)return;
   openInputModal("تعديل اسم الطالب",st.name,async name=>{
+    const duplicate=currentStudents.some(s=>String(s.id)!==String(st.id)&&String(s.name||"").trim().toLowerCase()===name.toLowerCase());
+    if(duplicate){alert("لا يمكن استخدام اسم موجود مسبقًا في المجموعة.");return}
     try{const {error}=await withTimeout(supabaseClient.from("students").update({name}).eq("id",st.id));if(error)throw error;await loadGroupData();status("تم تعديل اسم الطالب ✓","ok")}catch(err){showDbError(err)}
   });
 }
@@ -371,23 +373,33 @@ function confirmSaveSurvey(){
   confirmAction("هل تريد حفظ الاستبيان والنتائج الحالية؟",saveSurvey);
 }
 async function saveSurvey(){
-  const date=$("dateInput").value,day=$("daySelect").value,g=currentGroup();if(!g)return;
+  const info=getTodayInfo(),g=currentGroup();if(!g)return;
   const resultStudents=currentStudents.map((st,i)=>({number:i+1,name:st.name,score:calculateScore(st),percentage:calculatePercentage(st)}));
   try{
-    const {error}=await withTimeout(supabaseClient.from("saved_surveys").insert({group_id:currentGroupId,title:currentSurvey.title,day,survey_date:date,students:resultStudents}));if(error)throw error;
-    await loadGroupData();showSavedPage();status("تم حفظ الاستبيان والنتائج ✓","ok");
+    const {error}=await withTimeout(supabaseClient.from("saved_surveys").insert({group_id:currentGroupId,title:currentSurvey.title,day:info.day,date:info.date,students:resultStudents}));
+    if(error)throw error;
+    // إلغاء جميع الاختيارات تلقائيًا بعد الحفظ
+    const {error:clearError}=await withTimeout(supabaseClient.from("students").update({answers:[]}).eq("group_id",currentGroupId));
+    if(clearError)throw clearError;
+    currentStudents=currentStudents.map(st=>({...st,answers:[]}));
+    renderHome();
+    await loadGroupData();showSavedPage();status("تم حفظ الاستبيان وإلغاء الاختيارات ✓","ok");
   }catch(err){showDbError(err)}
 }
 function showSavedPage(){showPage("savedPage",document.querySelector('[data-page="savedPage"]'))}
 function renderSavedSurveys(){
-  const c=$("savedResults");if(!currentGroupId){c.innerHTML="";return}
+  const c=$("savedResults");
+  if(!currentGroupId){c.innerHTML="";return}
   if(!currentSavedSurveys.length){c.innerHTML='<div class="empty"><div class="empty-icon">📂</div>لا توجد استبيانات محفوظة في المجموعة الحالية</div>';return}
   c.innerHTML="";
-  currentSavedSurveys.forEach(item=>{
-    const card=document.createElement("div");card.className="result-card";
+  currentSavedSurveys.forEach((item,index)=>{
+    const card=document.createElement("div");card.className="result-card collapsed";
     const rows=(item.students||[]).map(st=>`<div class="result-row"><div class="result-number">${st.number}</div><div class="result-student">${esc(st.name)}</div><div class="result-score">${fmt(st.score)}</div><div class="result-percent">${fmt(st.percentage)}%</div></div>`).join("");
-    card.innerHTML=`<div class="result-head"><div class="day">${esc(item.day)}</div><div class="date">${fmtDate(item.date)}</div></div><div class="result-list">${rows}</div><div class="result-actions"><button class="action-btn small" data-a="copy">نسخ</button><button class="action-btn small" data-a="wa">واتساب</button><button class="action-btn small" data-a="txt">TXT</button><button class="action-btn small" data-a="excel">Excel</button><button class="action-btn small" data-a="pdf">PDF</button><button class="action-btn small danger" data-a="delete">حذف</button></div>`;
-    card.querySelector('[data-a=copy]').onclick=()=>copyResult(item.id);card.querySelector('[data-a=wa]').onclick=()=>shareWhatsApp(item.id);card.querySelector('[data-a=txt]').onclick=()=>exportText(item.id);card.querySelector('[data-a=excel]').onclick=()=>exportExcel(item.id);card.querySelector('[data-a=pdf]').onclick=()=>exportPDF(item.id);card.querySelector('[data-a=delete]').onclick=()=>deleteSaved(item.id);
+    const body=document.createElement("div");body.className="result-body";body.innerHTML=`<div class="result-list">${rows}</div><div class="result-actions"><button class="action-btn small" data-a="copy">نسخ</button><button class="action-btn small" data-a="wa">واتساب</button><button class="action-btn small" data-a="txt">TXT</button><button class="action-btn small" data-a="excel">Excel</button><button class="action-btn small" data-a="pdf">PDF</button><button class="action-btn small danger" data-a="delete">حذف</button></div>`;
+    const toggle=document.createElement("button");toggle.type="button";toggle.className="result-toggle";toggle.innerHTML=`<div class="result-summary"><span>📋 ${esc(item.title||"الاستبيان")}</span><span>${esc(item.day)} - ${fmtDate(item.date)} <span class="arrow">⌄</span></span></div>`;
+    toggle.onclick=()=>{card.classList.toggle("collapsed");toggle.querySelector(".arrow").textContent=card.classList.contains("collapsed")?"⌄":"⌃"};
+    card.appendChild(toggle);card.appendChild(body);
+    body.querySelector('[data-a=copy]').onclick=()=>copyResult(item.id);body.querySelector('[data-a=wa]').onclick=()=>shareWhatsApp(item.id);body.querySelector('[data-a=txt]').onclick=()=>exportText(item.id);body.querySelector('[data-a=excel]').onclick=()=>exportExcel(item.id);body.querySelector('[data-a=pdf]').onclick=()=>exportPDF(item.id);body.querySelector('[data-a=delete]').onclick=()=>deleteSaved(item.id);
     c.appendChild(card);
   });
 }
@@ -457,7 +469,6 @@ function showDbError(err){
   status("تعذر الاتصال بقاعدة البيانات: "+msg,"error");
 }
 async function init(){
-  setToday();
   try{
     if(!window.supabase?.createClient)throw new Error("تعذر تحميل مكتبة Supabase. تحقق من اتصال الإنترنت.");
     supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{auth:{persistSession:false}});
