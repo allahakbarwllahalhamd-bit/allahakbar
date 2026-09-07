@@ -1,13 +1,12 @@
+```html
 <!DOCTYPE html>
-
 <html lang="ar" dir="rtl">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>نظام درجات الطلاب</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 
@@ -28,7 +27,7 @@ body{
         radial-gradient(circle at top right,rgba(255,255,255,.08),transparent 35%),
         linear-gradient(135deg,#063b35,#075c50,#083f39);
     color:#26332f;
-    padding:10px;
+    padding:12px;
 }
 
 button,input,select{
@@ -46,12 +45,16 @@ button{
     margin:auto;
 }
 
+/* =========================
+   الهيدر
+========================= */
+
 .header{
     background:rgba(255,255,255,.97);
     border-radius:22px;
-    padding:22px 15px;
+    padding:24px 20px;
     text-align:center;
-    margin-bottom:10px;
+    margin-bottom:12px;
     box-shadow:0 8px 30px rgba(0,0,0,.18);
     border-top:5px solid #c9a227;
 }
@@ -59,7 +62,7 @@ button{
 .header h1{
     color:#075b4e;
     font-size:clamp(22px,4vw,34px);
-    margin-bottom:5px;
+    margin-bottom:7px;
     font-weight:800;
 }
 
@@ -74,38 +77,47 @@ button{
 .ornament{
     color:#c9a227;
     font-size:21px;
+    margin:2px 0;
 }
+
+/* =========================
+   التنقل
+========================= */
 
 .navbar{
     background:white;
     border-radius:16px;
-    padding:7px;
-    margin-bottom:10px;
+    padding:8px;
+    margin-bottom:12px;
     box-shadow:0 5px 20px rgba(0,0,0,.13);
+
     display:grid;
     grid-template-columns:repeat(4,1fr);
-    gap:6px;
+    gap:7px;
 }
 
 .nav-btn{
     background:#087f70;
     color:white;
-    min-height:45px;
-    border-radius:10px;
+    min-height:46px;
+    border-radius:11px;
     font-size:14px;
     font-weight:bold;
     transition:.2s;
 }
 
-.nav-btn:hover,
-.action-btn:hover{
+.nav-btn:hover{
     transform:translateY(-1px);
-    opacity:.9;
+    opacity:.92;
 }
 
 .nav-btn.active{
-    background:#b28b1c;
+    background:#c9a227;
 }
+
+/* =========================
+   الصفحات
+========================= */
 
 .page{
     display:none;
@@ -115,16 +127,22 @@ button{
     display:block;
 }
 
+/* =========================
+   اليوم والتاريخ
+========================= */
+
 .date-panel{
     background:white;
     border-radius:16px;
-    padding:12px;
-    margin-bottom:10px;
+    padding:13px;
+    margin-bottom:12px;
+
     display:flex;
     align-items:center;
     justify-content:center;
-    gap:9px;
+    gap:10px;
     flex-wrap:wrap;
+
     box-shadow:0 5px 20px rgba(0,0,0,.12);
 }
 
@@ -142,11 +160,15 @@ button{
     background:#f9fbfa;
 }
 
+/* =========================
+   البطاقات
+========================= */
+
 .panel{
     background:white;
     border-radius:18px;
-    padding:17px;
-    margin-bottom:12px;
+    padding:18px;
+    margin-bottom:15px;
     box-shadow:0 6px 22px rgba(0,0,0,.13);
 }
 
@@ -154,10 +176,66 @@ button{
     color:#075b4e;
     font-size:19px;
     font-weight:800;
-    margin-bottom:13px;
-    padding-bottom:8px;
+    margin-bottom:14px;
+    padding-bottom:9px;
     border-bottom:1px solid #e4ebe8;
 }
+
+/* =========================
+   المجموعات
+========================= */
+
+.group-box{
+    background:#f5faf8;
+    border:1px solid #dce8e4;
+    border-radius:14px;
+    padding:15px;
+}
+
+.group-current{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    align-items:center;
+}
+
+.group-current select{
+    flex:1;
+    min-width:200px;
+    padding:12px;
+    border:1px solid #d5dfdb;
+    border-radius:10px;
+    background:white;
+    outline:none;
+    color:#075b4e;
+    font-weight:bold;
+}
+
+.group-current button{
+    min-width:110px;
+}
+
+.group-info{
+    margin-top:10px;
+    color:#68736f;
+    font-size:13px;
+}
+
+.group-actions{
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+    margin-top:10px;
+}
+
+.group-actions button{
+    flex:1;
+    min-width:120px;
+}
+
+/* =========================
+   التحكم
+========================= */
 
 .controls{
     display:flex;
@@ -176,6 +254,10 @@ button{
     background:#fbfcfc;
 }
 
+/* =========================
+   الأزرار
+========================= */
+
 .action-btn{
     background:#087f70;
     color:white;
@@ -186,6 +268,11 @@ button{
     transition:.2s;
 }
 
+.action-btn:hover{
+    transform:translateY(-1px);
+    opacity:.9;
+}
+
 .action-btn.gold{
     background:#b28b1c;
 }
@@ -194,29 +281,18 @@ button{
     background:#a93434;
 }
 
-.action-btn.light{
-    background:#64736e;
-}
-
 .action-btn.small{
     padding:7px 10px;
     font-size:12px;
 }
 
-.group-box{
-    background:#f4f8f6;
-    border:1px solid #dce8e4;
-    border-radius:13px;
-    padding:15px;
-    margin-bottom:12px;
+.action-btn.light{
+    background:#64736e;
 }
 
-.current-group{
-    color:#075b4e;
-    font-size:18px;
-    font-weight:800;
-    text-align:center;
-}
+/* =========================
+   إعداد الاستبيان
+========================= */
 
 .survey-editor{
     background:#f7faf9;
@@ -240,13 +316,6 @@ button{
     margin-bottom:8px;
 }
 
-.choice-row input{
-    border:1px solid #d5dfdb;
-    border-radius:8px;
-    padding:9px;
-    outline:none;
-}
-
 .choice-row input[type="text"]{
     flex:1;
     min-width:0;
@@ -256,12 +325,23 @@ button{
     width:95px;
 }
 
+.choice-row input{
+    border:1px solid #d5dfdb;
+    border-radius:8px;
+    padding:9px;
+    outline:none;
+}
+
 .choice-row button{
     width:38px;
     border-radius:8px;
     background:#a93434;
     color:white;
 }
+
+/* =========================
+   الطلاب
+========================= */
 
 .students-list{
     display:grid;
@@ -342,8 +422,12 @@ button{
     font-weight:bold;
 }
 
+/* =========================
+   الحفظ
+========================= */
+
 .save-area{
-    margin-top:16px;
+    margin-top:18px;
     text-align:center;
 }
 
@@ -358,6 +442,10 @@ button{
     font-weight:800;
 }
 
+/* =========================
+   النتائج
+========================= */
+
 .result-card{
     background:white;
     border-radius:18px;
@@ -370,7 +458,7 @@ button{
     background:#075b4e;
     color:white;
     text-align:center;
-    padding:14px;
+    padding:16px;
 }
 
 .result-head .day{
@@ -380,6 +468,7 @@ button{
 
 .result-head .date{
     font-size:15px;
+    margin-top:2px;
 }
 
 .result-list{
@@ -388,10 +477,10 @@ button{
 
 .result-row{
     display:grid;
-    grid-template-columns:45px 1fr 90px 100px;
+    grid-template-columns:45px 1fr 100px 100px;
     align-items:center;
     gap:8px;
-    padding:12px 5px;
+    padding:13px 5px;
     border-bottom:1px solid #e5ebe9;
 }
 
@@ -418,14 +507,18 @@ button{
     display:flex;
     flex-wrap:wrap;
     gap:6px;
-    padding:11px 15px;
+    padding:12px 15px;
     border-top:1px solid #e3e9e7;
 }
 
 .result-actions .action-btn{
     flex:1;
-    min-width:70px;
+    min-width:75px;
 }
+
+/* =========================
+   فارغ
+========================= */
 
 .empty{
     background:white;
@@ -440,6 +533,10 @@ button{
     font-size:42px;
     margin-bottom:7px;
 }
+
+/* =========================
+   حول
+========================= */
 
 .about{
     text-align:center;
@@ -459,19 +556,11 @@ button{
 .about p{
     color:#66736f;
     line-height:2;
-    margin:8px 0;
 }
 
-.status{
-    text-align:center;
-    padding:8px;
-    margin-bottom:10px;
-    border-radius:9px;
-    background:#e8f4f1;
-    color:#075b4e;
-    font-weight:bold;
-    font-size:13px;
-}
+/* =========================
+   النوافذ
+========================= */
 
 .modal{
     display:none;
@@ -500,7 +589,12 @@ button{
 
 .modal-box h3{
     color:#075b4e;
-    margin-bottom:12px;
+    margin-bottom:10px;
+}
+
+.modal-box p{
+    color:#68736f;
+    margin-bottom:18px;
 }
 
 .modal-box input{
@@ -534,6 +628,10 @@ button{
     color:white;
 }
 
+/* =========================
+   الفوتر
+========================= */
+
 footer{
     color:rgba(255,255,255,.85);
     text-align:center;
@@ -541,10 +639,19 @@ footer{
     font-size:12px;
 }
 
+/* =========================
+   الهاتف
+========================= */
+
 @media(max-width:700px){
 
     body{
-        padding:6px;
+        padding:7px;
+    }
+
+    .header{
+        padding:18px 10px;
+        border-radius:17px;
     }
 
     .navbar{
@@ -566,6 +673,10 @@ footer{
         min-width:120px;
     }
 
+    .panel{
+        padding:13px;
+    }
+
     .controls{
         flex-direction:column;
     }
@@ -573,6 +684,16 @@ footer{
     .controls input,
     .controls select,
     .controls button{
+        width:100%;
+    }
+
+    .group-current{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .group-current select,
+    .group-current button{
         width:100%;
     }
 
@@ -589,10 +710,13 @@ footer{
         flex:1;
     }
 
+    .choice-row button{
+        width:45px;
+    }
+
     .result-row{
-        grid-template-columns:32px 1fr 65px 75px;
-        gap:4px;
-        font-size:12px;
+        grid-template-columns:32px 1fr 70px 70px;
+        font-size:13px;
     }
 
     .result-actions .action-btn{
@@ -603,8 +727,10 @@ footer{
 @media(max-width:430px){
 
     .result-row{
-        grid-template-columns:28px 1fr 58px 65px;
-        font-size:11px;
+        grid-template-columns:28px 1fr 60px 60px;
+        gap:3px;
+        padding:11px 0;
+        font-size:12px;
     }
 
     .result-actions .action-btn{
@@ -613,7 +739,6 @@ footer{
 }
 
 </style>
-
 </head>
 
 <body>
@@ -622,284 +747,300 @@ footer{
 
 <header class="header">
 
-```
-<div class="ornament">۞ ✦ ۞</div>
+    <div class="ornament">۞ ✦ ۞</div>
 
-<h1>نظام درجات الطلاب</h1>
+    <h1>نظام درجات الطلاب</h1>
 
-<div class="hadith">
-    ﴿ خيركم من تعلم القرآن وعلمه ﴾
-</div>
+    <div class="hadith">
+        ﴿ خيركم من تعلم القرآن وعلمه ﴾
+    </div>
 
-<div class="ornament">۞ ✦ ۞</div>
-```
+    <div class="ornament">۞ ✦ ۞</div>
 
 </header>
 
+
 <nav class="navbar">
 
-```
-<button class="nav-btn active"
-        data-page="homePage"
-        onclick="showPage('homePage',this)">
-    الرئيسية
-</button>
+    <button class="nav-btn active"
+            data-page="homePage"
+            onclick="showPage('homePage',this)">
+        الرئيسية
+    </button>
 
-<button class="nav-btn"
-        data-page="controlPage"
-        onclick="showPage('controlPage',this)">
-    لوحة التحكم
-</button>
+    <button class="nav-btn"
+            data-page="controlPage"
+            onclick="showPage('controlPage',this)">
+        لوحة التحكم
+    </button>
 
-<button class="nav-btn"
-        data-page="savedPage"
-        onclick="showPage('savedPage',this)">
-    الاستبيانات المحفوظة
-</button>
+    <button class="nav-btn"
+            data-page="savedPage"
+            onclick="showPage('savedPage',this)">
+        الاستبيانات المحفوظة
+    </button>
 
-<button class="nav-btn"
-        data-page="aboutPage"
-        onclick="showPage('aboutPage',this)">
-    حول
-</button>
-```
+    <button class="nav-btn"
+            data-page="aboutPage"
+            onclick="showPage('aboutPage',this)">
+        حول
+    </button>
 
 </nav>
 
-<div id="status" class="status">
-    جاري الاتصال بقاعدة البيانات...
-</div>
+
+<!-- اليوم والتاريخ خارج لوحة التحكم -->
 
 <div class="date-panel">
 
-```
-<label>بيانات الاستبيان:</label>
+    <label>بيانات الاستبيان:</label>
 
-<select id="daySelect">
-    <option>السبت</option>
-    <option>الأحد</option>
-    <option>الإثنين</option>
-    <option>الثلاثاء</option>
-    <option>الأربعاء</option>
-    <option>الخميس</option>
-    <option>الجمعة</option>
-</select>
+    <select id="daySelect">
+        <option value="السبت">السبت</option>
+        <option value="الأحد">الأحد</option>
+        <option value="الإثنين">الإثنين</option>
+        <option value="الثلاثاء">الثلاثاء</option>
+        <option value="الأربعاء">الأربعاء</option>
+        <option value="الخميس">الخميس</option>
+        <option value="الجمعة">الجمعة</option>
+    </select>
 
-<input type="date" id="dateInput">
-```
+    <input type="date" id="dateInput">
 
 </div>
+
+
+<!-- =========================
+     الرئيسية
+========================= -->
 
 <main id="homePage" class="page active">
 
-```
-<div class="panel">
+    <div class="panel">
 
-    <div class="panel-title">
-        📚 المجموعة الحالية
+        <div class="panel-title">
+            👥 المجموعات
+        </div>
+
+        <div class="group-box">
+
+            <div class="group-current">
+
+                <select id="homeGroupSelect"
+                        onchange="changeGroup(this.value)">
+                </select>
+
+                <button class="action-btn"
+                        onclick="openAddGroupModal()">
+                    إضافة مجموعة
+                </button>
+
+            </div>
+
+            <div class="group-actions">
+
+                <button class="action-btn gold"
+                        onclick="openRenameGroupModal()">
+                    تعديل اسم المجموعة
+                </button>
+
+                <button class="action-btn danger"
+                        onclick="confirmDeleteGroup()">
+                    حذف المجموعة
+                </button>
+
+            </div>
+
+            <div class="group-info"
+                 id="currentGroupInfo">
+            </div>
+
+        </div>
+
     </div>
 
-    <div id="currentGroupHome" class="current-group">
-        لم يتم اختيار مجموعة
+
+    <div class="panel">
+
+        <div class="panel-title">
+            📋 الاستبيان الحالي
+        </div>
+
+        <div id="homeSurveyTitle"></div>
+
     </div>
 
-</div>
 
-<div class="panel">
+    <div class="panel">
 
-    <div class="panel-title">
-        📋 الاستبيان الحالي
+        <div class="panel-title">
+            👨‍🎓 الطلاب
+        </div>
+
+        <div id="homeStudents"></div>
+
     </div>
 
-    <div id="homeSurveyTitle"></div>
 
-</div>
+    <div class="save-area">
 
-<div class="panel">
+        <button class="save-final"
+                onclick="confirmSaveSurvey()">
+            💾 حفظ الاستبيان والنتائج
+        </button>
 
-    <div class="panel-title">
-        👨‍🎓 الطلاب
     </div>
-
-    <div id="homeStudents"></div>
-
-</div>
-
-<div class="save-area">
-
-    <button class="save-final"
-            onclick="confirmSaveSurvey()">
-        💾 حفظ الاستبيان والنتائج
-    </button>
-
-</div>
-```
 
 </main>
 
+
+<!-- =========================
+     لوحة التحكم
+========================= -->
+
 <section id="controlPage" class="page">
 
-```
-<div class="panel">
+    <div class="panel">
 
-    <div class="panel-title">
-        📚 إدارة المجموعات
-    </div>
+        <div class="panel-title">
+            ⚙️ إدارة طلاب المجموعة
+        </div>
 
-    <div class="controls">
+        <div class="group-info"
+             id="controlGroupInfo"
+             style="margin-bottom:12px;">
+        </div>
 
-        <input id="groupName"
-               type="text"
-               placeholder="اسم المجموعة الجديدة">
+        <div class="controls">
 
-        <button class="action-btn"
-                onclick="addGroup()">
-            إضافة مجموعة
-        </button>
+            <input type="text"
+                   id="studentName"
+                   placeholder="اكتب اسم الطالب...">
 
-    </div>
+            <button class="action-btn"
+                    onclick="confirmAddStudent()">
+                إضافة طالب
+            </button>
 
-    <div style="height:10px"></div>
+        </div>
 
-    <select id="groupSelect"
-            style="width:100%;padding:11px;border:1px solid #d5dfdb;border-radius:9px;background:white">
-        <option value="">
-            اختر المجموعة
-        </option>
-    </select>
+        <div style="height:12px"></div>
 
-    <div id="groupActions"
-         style="display:none;gap:7px;margin-top:9px">
+        <select id="studentSelect"
+                style="
+                    width:100%;
+                    padding:11px;
+                    border:1px solid #d5dfdb;
+                    border-radius:9px;
+                    background:#fff;
+                    outline:none;
+                ">
+            <option value="">
+                اختر طالبًا للتعديل أو الحذف
+            </option>
+        </select>
 
-        <button class="action-btn small"
-                onclick="renameGroup()">
-            تعديل اسم المجموعة
-        </button>
+        <div id="selectedStudentActions"
+             style="
+                display:none;
+                margin-top:9px;
+                gap:7px;
+             ">
 
-        <button class="action-btn small danger"
-                onclick="deleteGroup()">
-            حذف المجموعة
-        </button>
+            <button class="action-btn small"
+                    onclick="editSelectedStudent()">
+                تعديل الاسم
+            </button>
 
-    </div>
+            <button class="action-btn small danger"
+                    onclick="confirmDeleteSelectedStudent()">
+                حذف الطالب
+            </button>
 
-</div>
-
-<div class="panel">
-
-    <div class="panel-title">
-        👨‍🎓 إدارة الطلاب
-    </div>
-
-    <div class="controls">
-
-        <input id="studentName"
-               type="text"
-               placeholder="اكتب اسم الطالب">
-
-        <button class="action-btn"
-                onclick="addStudent()">
-            إضافة طالب
-        </button>
+        </div>
 
     </div>
 
-    <div style="height:10px"></div>
 
-    <select id="studentSelect"
-            style="width:100%;padding:11px;border:1px solid #d5dfdb;border-radius:9px;background:white">
-        <option value="">
-            اختر طالبًا للتعديل أو الحذف
-        </option>
-    </select>
+    <div class="panel">
 
-    <div id="selectedStudentActions"
-         style="display:none;gap:7px;margin-top:9px">
+        <div class="panel-title">
+            📝 إعداد الاستبيان للمجموعة
+        </div>
 
-        <button class="action-btn small"
-                onclick="editStudent()">
-            تعديل الاسم
-        </button>
+        <div class="survey-editor">
 
-        <button class="action-btn small danger"
-                onclick="deleteStudent()">
-            حذف الطالب
-        </button>
+            <input type="text"
+                   id="surveyTitle"
+                   class="survey-title-input"
+                   placeholder="اسم الاستبيان">
 
-    </div>
+            <div id="choicesEditor"></div>
 
-</div>
+            <button class="action-btn"
+                    onclick="addChoice()">
+                إضافة اختيار
+            </button>
 
-<div class="panel">
+            <button class="action-btn gold"
+                    onclick="confirmSaveSurveySettings()"
+                    style="margin-right:5px;">
+                حفظ إعداد الاستبيان
+            </button>
 
-    <div class="panel-title">
-        📝 إعداد الاستبيان
-    </div>
-
-    <div class="survey-editor">
-
-        <input id="surveyTitle"
-               class="survey-title-input"
-               placeholder="اسم الاستبيان">
-
-        <div id="choicesEditor"></div>
-
-        <button class="action-btn"
-                onclick="addChoice()">
-            إضافة اختيار
-        </button>
-
-        <button class="action-btn gold"
-                onclick="saveSurveySettings()">
-            حفظ إعداد الاستبيان
-        </button>
+        </div>
 
     </div>
-
-</div>
-```
 
 </section>
+
+
+<!-- =========================
+     الاستبيانات المحفوظة
+========================= -->
 
 <section id="savedPage" class="page">
 
-```
-<div id="savedResults"></div>
-```
+    <div id="savedResults"></div>
 
 </section>
+
+
+<!-- =========================
+     حول
+========================= -->
 
 <section id="aboutPage" class="page">
 
-```
-<div class="panel about">
+    <div class="panel about">
 
-    <div class="symbol">۞</div>
+        <div class="symbol">۞</div>
 
-    <h2>حول النظام</h2>
+        <h2>حول النظام</h2>
 
-    <p>
-        نظام احترافي لإدارة مجموعات الطلاب
-        وإعداد الاستبيانات وحفظ النتائج.
-    </p>
+        <p>
+            نظام بسيط واحترافي لإدارة درجات الطلاب
+            وإعداد الاستبيانات وحفظ النتائج.
+        </p>
 
-    <p>
-        البيانات محفوظة على Supabase
-        ويمكن الوصول إليها من أكثر من جهاز.
-    </p>
+        <p>
+            كل مجموعة تعمل كقاعدة بيانات مستقلة،
+            ويمكن إدارة الطلاب والاستبيانات والنتائج
+            لكل مجموعة بشكل منفصل.
+        </p>
 
-    <div class="ornament">
-        ✦ ۞ ✦
+        <div class="ornament">
+            ✦ ۞ ✦
+        </div>
+
+        <p>
+            ﴿ وَقُلْ رَبِّ زِدْنِي عِلْمًا ﴾
+        </p>
+
     </div>
 
-    <p>
-        ﴿ وَقُلْ رَبِّ زِدْنِي عِلْمًا ﴾
-    </p>
-
-</div>
-```
-
 </section>
+
 
 <footer>
     ﴿ وَقُلْ رَبِّ زِدْنِي عِلْمًا ﴾
@@ -907,206 +1048,647 @@ footer{
 
 </div>
 
+
+<!-- =========================
+     نافذة التأكيد
+========================= -->
+
 <div id="confirmModal" class="modal">
 
-```
-<div class="modal-box">
+    <div class="modal-box">
 
-    <h3 id="confirmTitle">
-        تأكيد العملية
-    </h3>
+        <h3 id="confirmTitle">
+            تأكيد العملية
+        </h3>
 
-    <p id="confirmMessage">
-        هل أنت متأكد؟
-    </p>
+        <p id="confirmMessage">
+            هل أنت متأكد؟
+        </p>
 
-    <div class="modal-buttons">
+        <div class="modal-buttons">
 
-        <button class="btn-yes"
-                id="confirmYes">
-            نعم
-        </button>
+            <button class="btn-yes"
+                    id="confirmYes">
+                نعم
+            </button>
 
-        <button class="btn-no"
-                onclick="closeConfirm()">
-            لا
-        </button>
+            <button class="btn-no"
+                    onclick="closeConfirm()">
+                لا
+            </button>
 
-    </div>
-
-</div>
-```
-
-</div>
-
-<div id="inputModal" class="modal">
-
-```
-<div class="modal-box">
-
-    <h3 id="inputTitle">
-        إدخال البيانات
-    </h3>
-
-    <input id="inputModalValue">
-
-    <div class="modal-buttons">
-
-        <button class="btn-yes"
-                id="inputSave">
-            حفظ
-        </button>
-
-        <button class="btn-no"
-                onclick="closeInputModal()">
-            إلغاء
-        </button>
+        </div>
 
     </div>
 
 </div>
-```
+
+
+<!-- =========================
+     إضافة مجموعة
+========================= -->
+
+<div id="groupModal" class="modal">
+
+    <div class="modal-box">
+
+        <h3>إضافة مجموعة جديدة</h3>
+
+        <p>
+            اكتب اسم المجموعة الجديدة
+        </p>
+
+        <input type="text"
+               id="groupNameInput"
+               placeholder="مثال: المجموعة الأولى">
+
+        <div class="modal-buttons">
+
+            <button class="btn-yes"
+                    onclick="createGroup()">
+                إضافة
+            </button>
+
+            <button class="btn-no"
+                    onclick="closeGroupModal()">
+                إلغاء
+            </button>
+
+        </div>
+
+    </div>
 
 </div>
+
+
+<!-- =========================
+     تعديل اسم المجموعة
+========================= -->
+
+<div id="renameGroupModal" class="modal">
+
+    <div class="modal-box">
+
+        <h3>تعديل اسم المجموعة</h3>
+
+        <input type="text"
+               id="renameGroupInput"
+               placeholder="اسم المجموعة">
+
+        <div class="modal-buttons">
+
+            <button class="btn-yes"
+                    onclick="renameGroup()">
+                حفظ
+            </button>
+
+            <button class="btn-no"
+                    onclick="closeRenameGroupModal()">
+                إلغاء
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     تعديل الطالب
+========================= -->
+
+<div id="editStudentModal" class="modal">
+
+    <div class="modal-box">
+
+        <h3>تعديل اسم الطالب</h3>
+
+        <input type="text"
+               id="editStudentInput"
+               placeholder="اسم الطالب">
+
+        <div class="modal-buttons">
+
+            <button class="btn-yes"
+                    onclick="confirmEditStudent()">
+                حفظ
+            </button>
+
+            <button class="btn-no"
+                    onclick="closeEditStudent()">
+                إلغاء
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
 
 <script>
 
 /* =====================================================
-   إعداد Supabase
-   ضع بيانات مشروعك هنا
+   قاعدة بيانات التطبيق
 ===================================================== */
 
-const SUPABASE_URL =
-    "ضع_رابط_مشروع_Supabase_هنا";
-
-const SUPABASE_ANON_KEY =
-    "ضع_مفتاح_anon_هنا";
-
-
-const supabaseClient =
-    supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_ANON_KEY
-    );
-
-
-/* =====================================================
-   البيانات
-===================================================== */
-
-let groups = [];
-let students = [];
-let survey = {
-    title:"الاستبيان",
-    choices:[
-        {text:"الاختيار الأول",score:1},
-        {text:"الاختيار الثاني",score:2},
-        {text:"الاختيار الثالث",score:3},
-        {text:"الاختيار الرابع",score:4}
-    ]
+let appData = {
+    groups: [],
+    activeGroupId: null
 };
 
-let savedSurveys = [];
-
-let currentGroupId = null;
-
+let editingStudentId = null;
 let confirmCallback = null;
-let inputCallback = null;
 
 
 /* =====================================================
-   الرسائل
+   إنشاء بيانات المجموعة الافتراضية
 ===================================================== */
 
-function setStatus(message){
+function createDefaultSurvey(){
 
-    document.getElementById("status").textContent =
-        message;
+    return {
+        title:"الاستبيان",
+        choices:[
+            {
+                text:"الاختيار الأول",
+                score:1
+            },
+            {
+                text:"الاختيار الثاني",
+                score:2
+            },
+            {
+                text:"الاختيار الثالث",
+                score:3
+            },
+            {
+                text:"الاختيار الرابع",
+                score:4
+            }
+        ]
+    };
+
+}
+
+
+function createGroupObject(name){
+
+    return {
+        id:
+            Date.now() +
+            Math.floor(Math.random()*10000),
+
+        name:name,
+
+        students:[],
+
+        survey:createDefaultSurvey(),
+
+        savedSurveys:[]
+
+    };
 
 }
 
 
 /* =====================================================
-   مساعدات
+   تحميل البيانات
 ===================================================== */
 
-function escapeHTML(text){
+function loadData(){
 
-    return String(text)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+    const saved =
+        localStorage.getItem("studentsSurveyApp");
+
+    if(saved){
+
+        try{
+
+            appData = JSON.parse(saved);
+
+        }catch(error){
+
+            appData = {
+                groups:[],
+                activeGroupId:null
+            };
+
+        }
+
+    }
+
+
+    /*
+       ترحيل البيانات القديمة إن وجدت
+    */
+
+    if(!appData.groups || !Array.isArray(appData.groups)){
+
+        appData.groups = [];
+
+    }
+
+
+    if(!appData.groups.length){
+
+        const defaultGroup =
+            createGroupObject("المجموعة الأولى");
+
+        appData.groups.push(defaultGroup);
+
+        appData.activeGroupId =
+            defaultGroup.id;
+
+    }
+
+
+    if(
+        !appData.activeGroupId ||
+        !appData.groups.some(
+            group => group.id === appData.activeGroupId
+        )
+    ){
+
+        appData.activeGroupId =
+            appData.groups[0].id;
+
+    }
+
+
+    normalizeGroups();
+
+    saveData();
 
 }
 
 
-function formatNumber(number){
+/* =====================================================
+   معالجة البيانات القديمة والناقصة
+===================================================== */
 
-    return Number(
-        Number(number || 0).toFixed(2)
+function normalizeGroups(){
+
+    appData.groups.forEach(group => {
+
+        if(!Array.isArray(group.students)){
+            group.students = [];
+        }
+
+        if(!Array.isArray(group.savedSurveys)){
+            group.savedSurveys = [];
+        }
+
+        if(!group.survey){
+            group.survey = createDefaultSurvey();
+        }
+
+        if(!Array.isArray(group.survey.choices)){
+            group.survey.choices =
+                createDefaultSurvey().choices;
+        }
+
+        group.students.forEach(student => {
+
+            if(!Array.isArray(student.answers)){
+                student.answers = [];
+            }
+
+        });
+
+    });
+
+}
+
+
+/* =====================================================
+   حفظ قاعدة البيانات
+===================================================== */
+
+function saveData(){
+
+    localStorage.setItem(
+        "studentsSurveyApp",
+        JSON.stringify(appData)
     );
 
 }
 
 
-function formatDate(date){
+/* =====================================================
+   المجموعة الحالية
+===================================================== */
 
-    if(!date) return "";
+function getCurrentGroup(){
 
-    const parts =
-        String(date).split("-");
-
-    if(parts.length !== 3)
-        return date;
-
-    return `${parts[2]}/${parts[1]}/${parts[0]}`;
-
-}
-
-
-function todayDate(){
-
-    const d = new Date();
-
-    const y = d.getFullYear();
-
-    const m = String(
-        d.getMonth()+1
-    ).padStart(2,"0");
-
-    const day = String(
-        d.getDate()
-    ).padStart(2,"0");
-
-    return `${y}-${m}-${day}`;
+    return appData.groups.find(
+        group =>
+            group.id === appData.activeGroupId
+    );
 
 }
 
 
-function setToday(){
+/* =====================================================
+   تغيير المجموعة
+===================================================== */
 
-    const d = new Date();
+function changeGroup(id){
+
+    const groupId = Number(id);
+
+    const exists =
+        appData.groups.some(
+            group => group.id === groupId
+        );
+
+    if(!exists) return;
+
+    appData.activeGroupId = groupId;
+
+    saveData();
+
+    renderAll();
+
+}
+
+
+/* =====================================================
+   عرض قائمة المجموعات
+===================================================== */
+
+function renderGroupSelects(){
+
+    const homeSelect =
+        document.getElementById("homeGroupSelect");
+
+    if(!homeSelect) return;
+
+    homeSelect.innerHTML = "";
+
+    appData.groups.forEach(
+        (group,index) => {
+
+            const option =
+                document.createElement("option");
+
+            option.value = group.id;
+
+            option.textContent =
+                `${index+1} - ${group.name}`;
+
+            option.selected =
+                group.id === appData.activeGroupId;
+
+            homeSelect.appendChild(option);
+
+        }
+    );
+
+
+    const current =
+        getCurrentGroup();
+
+    if(current){
+
+        document.getElementById(
+            "currentGroupInfo"
+        ).textContent =
+            `المجموعة الحالية: ${current.name} — عدد الطلاب: ${current.students.length}`;
+
+        document.getElementById(
+            "controlGroupInfo"
+        ).textContent =
+            `المجموعة الحالية: ${current.name} — جميع التعديلات هنا تخص هذه المجموعة فقط.`;
+
+    }
+
+}
+
+
+/* =====================================================
+   إضافة مجموعة
+===================================================== */
+
+function openAddGroupModal(){
 
     document.getElementById(
-        "dateInput"
-    ).value = todayDate();
-
-    const days = [
-        "الأحد",
-        "الإثنين",
-        "الثلاثاء",
-        "الأربعاء",
-        "الخميس",
-        "الجمعة",
-        "السبت"
-    ];
+        "groupNameInput"
+    ).value = "";
 
     document.getElementById(
-        "daySelect"
+        "groupModal"
+    ).classList.add("active");
+
+    setTimeout(
+        () => {
+            document.getElementById(
+                "groupNameInput"
+            ).focus();
+        },
+        50
+    );
+
+}
+
+
+function closeGroupModal(){
+
+    document.getElementById(
+        "groupModal"
+    ).classList.remove("active");
+
+}
+
+
+function createGroup(){
+
+    const input =
+        document.getElementById(
+            "groupNameInput"
+        );
+
+    const name =
+        input.value.trim();
+
+    if(!name){
+
+        alert("اكتب اسم المجموعة أولاً");
+
+        input.focus();
+
+        return;
+
+    }
+
+
+    const duplicate =
+        appData.groups.some(
+            group =>
+                group.name.trim().toLowerCase() ===
+                name.toLowerCase()
+        );
+
+    if(duplicate){
+
+        alert("يوجد بالفعل مجموعة بهذا الاسم");
+
+        return;
+
+    }
+
+
+    const group =
+        createGroupObject(name);
+
+    appData.groups.push(group);
+
+    appData.activeGroupId =
+        group.id;
+
+    saveData();
+
+    closeGroupModal();
+
+    renderAll();
+
+    showPage(
+        "homePage",
+        document.querySelector(
+            '[data-page="homePage"]'
+        )
+    );
+
+}
+
+
+/* =====================================================
+   تعديل اسم المجموعة
+===================================================== */
+
+function openRenameGroupModal(){
+
+    const group =
+        getCurrentGroup();
+
+    if(!group) return;
+
+    document.getElementById(
+        "renameGroupInput"
     ).value =
-        days[d.getDay()];
+        group.name;
+
+    document.getElementById(
+        "renameGroupModal"
+    ).classList.add("active");
+
+}
+
+
+function closeRenameGroupModal(){
+
+    document.getElementById(
+        "renameGroupModal"
+    ).classList.remove("active");
+
+}
+
+
+function renameGroup(){
+
+    const group =
+        getCurrentGroup();
+
+    if(!group) return;
+
+    const input =
+        document.getElementById(
+            "renameGroupInput"
+        );
+
+    const name =
+        input.value.trim();
+
+    if(!name){
+
+        alert("اكتب اسم المجموعة");
+
+        return;
+
+    }
+
+
+    const duplicate =
+        appData.groups.some(
+            item =>
+                item.id !== group.id &&
+                item.name.toLowerCase() ===
+                name.toLowerCase()
+        );
+
+    if(duplicate){
+
+        alert("يوجد مجموعة أخرى بهذا الاسم");
+
+        return;
+
+    }
+
+
+    group.name = name;
+
+    saveData();
+
+    closeRenameGroupModal();
+
+    renderAll();
+
+}
+
+
+/* =====================================================
+   حذف المجموعة
+===================================================== */
+
+function confirmDeleteGroup(){
+
+    const group =
+        getCurrentGroup();
+
+    if(!group) return;
+
+    if(appData.groups.length === 1){
+
+        alert(
+            "لا يمكن حذف المجموعة الوحيدة. يجب أن تبقى مجموعة واحدة على الأقل."
+        );
+
+        return;
+
+    }
+
+
+    confirmAction(
+        `هل تريد حذف المجموعة "${group.name}" وجميع الطلاب والاستبيانات المحفوظة بداخلها؟`,
+        function(){
+
+            appData.groups =
+                appData.groups.filter(
+                    item =>
+                        item.id !== group.id
+                );
+
+
+            appData.activeGroupId =
+                appData.groups[0].id;
+
+            saveData();
+
+            renderAll();
+
+        }
+    );
 
 }
 
@@ -1119,38 +1701,52 @@ function showPage(pageId,button){
 
     document
         .querySelectorAll(".page")
-        .forEach(page =>
-            page.classList.remove("active")
+        .forEach(
+            page =>
+                page.classList.remove("active")
         );
 
-    document
-        .getElementById(pageId)
-        .classList.add("active");
+
+    const page =
+        document.getElementById(pageId);
+
+    if(page){
+        page.classList.add("active");
+    }
+
 
     document
         .querySelectorAll(".nav-btn")
-        .forEach(btn =>
-            btn.classList.remove("active")
+        .forEach(
+            btn =>
+                btn.classList.remove("active")
         );
 
-    if(button)
-        button.classList.add("active");
 
-    if(pageId === "savedPage")
+    if(button){
+        button.classList.add("active");
+    }
+
+
+    if(pageId === "savedPage"){
+
         renderSavedSurveys();
+
+    }
 
 }
 
 
 /* =====================================================
-   النوافذ
+   نافذة التأكيد
 ===================================================== */
 
 function confirmAction(message,callback){
 
     document.getElementById(
         "confirmMessage"
-    ).textContent = message;
+    ).innerText =
+        message;
 
     confirmCallback = callback;
 
@@ -1158,20 +1754,23 @@ function confirmAction(message,callback){
         "confirmModal"
     ).classList.add("active");
 
-    document.getElementById(
-        "confirmYes"
-    ).onclick = function(){
-
-        const cb = confirmCallback;
-
-        closeConfirm();
-
-        if(cb)
-            cb();
-
-    };
-
 }
+
+
+document.getElementById(
+    "confirmYes"
+).onclick = function(){
+
+    const callback =
+        confirmCallback;
+
+    closeConfirm();
+
+    if(callback){
+        callback();
+    }
+
+};
 
 
 function closeConfirm(){
@@ -1185,480 +1784,17 @@ function closeConfirm(){
 }
 
 
-function inputAction(title,value,callback){
-
-    document.getElementById(
-        "inputTitle"
-    ).textContent = title;
-
-    document.getElementById(
-        "inputModalValue"
-    ).value = value || "";
-
-    inputCallback = callback;
-
-    document.getElementById(
-        "inputModal"
-    ).classList.add("active");
-
-    document.getElementById(
-        "inputModalValue"
-    ).focus();
-
-    document.getElementById(
-        "inputSave"
-    ).onclick = function(){
-
-        const value =
-            document.getElementById(
-                "inputModalValue"
-            ).value.trim();
-
-        if(!value){
-            alert("اكتب البيانات أولاً");
-            return;
-        }
-
-        const cb = inputCallback;
-
-        closeInputModal();
-
-        if(cb)
-            cb(value);
-
-    };
-
-}
-
-
-function closeInputModal(){
-
-    document.getElementById(
-        "inputModal"
-    ).classList.remove("active");
-
-    inputCallback = null;
-
-}
-
-
 /* =====================================================
-   المجموعات
+   إضافة طالب
 ===================================================== */
 
-async function loadGroups(){
-
-    const {data,error} =
-        await supabaseClient
-            .from("groups")
-            .select("*")
-            .order("created_at",{ascending:true});
-
-    if(error){
-
-        console.error(error);
-
-        setStatus(
-            "تعذر الاتصال بقاعدة البيانات"
-        );
-
-        return;
-
-    }
-
-    groups = data || [];
-
-    renderGroups();
-
-}
-
-
-function renderGroups(){
-
-    const select =
-        document.getElementById(
-            "groupSelect"
-        );
-
-    select.innerHTML =
-        `<option value="">
-            اختر المجموعة
-        </option>`;
-
-    groups.forEach(group => {
-
-        const option =
-            document.createElement("option");
-
-        option.value = group.id;
-
-        option.textContent =
-            group.name;
-
-        select.appendChild(option);
-
-    });
-
-    if(currentGroupId){
-
-        select.value =
-            currentGroupId;
-
-        document.getElementById(
-            "groupActions"
-        ).style.display = "flex";
-
-    }
-
-}
-
-
-async function addGroup(){
-
-    const input =
-        document.getElementById(
-            "groupName"
-        );
-
-    const name =
-        input.value.trim();
-
-    if(!name){
-
-        alert("اكتب اسم المجموعة");
-
-        input.focus();
-
-        return;
-
-    }
-
-    const {data,error} =
-        await supabaseClient
-            .from("groups")
-            .insert({
-                name:name
-            })
-            .select()
-            .single();
-
-    if(error){
-
-        alert("حدث خطأ أثناء إضافة المجموعة");
-
-        console.error(error);
-
-        return;
-
-    }
-
-    input.value = "";
-
-    groups.push(data);
-
-    currentGroupId = data.id;
-
-    renderGroups();
-
-    document.getElementById(
-        "groupSelect"
-    ).value = data.id;
-
-    await loadGroupData();
-
-    setStatus(
-        `المجموعة الحالية: ${data.name}`
-    );
-
-}
-
-
-async function renameGroup(){
-
-    if(!currentGroupId)
-        return;
+function confirmAddStudent(){
 
     const group =
-        groups.find(
-            g => g.id === currentGroupId
-        );
+        getCurrentGroup();
 
-    if(!group)
-        return;
+    if(!group) return;
 
-    inputAction(
-        "تعديل اسم المجموعة",
-        group.name,
-        async function(newName){
-
-            const {error} =
-                await supabaseClient
-                    .from("groups")
-                    .update({
-                        name:newName
-                    })
-                    .eq("id",currentGroupId);
-
-            if(error){
-
-                alert("تعذر تعديل اسم المجموعة");
-
-                return;
-
-            }
-
-            group.name = newName;
-
-            renderGroups();
-
-            renderHome();
-
-            setStatus(
-                `المجموعة الحالية: ${newName}`
-            );
-
-        }
-    );
-
-}
-
-
-async function deleteGroup(){
-
-    if(!currentGroupId)
-        return;
-
-    const group =
-        groups.find(
-            g => g.id === currentGroupId
-        );
-
-    if(!group)
-        return;
-
-    confirmAction(
-        `هل تريد حذف المجموعة "${group.name}" وكل بياناتها؟`,
-        async function(){
-
-            const {error} =
-                await supabaseClient
-                    .from("groups")
-                    .delete()
-                    .eq("id",currentGroupId);
-
-            if(error){
-
-                alert("تعذر حذف المجموعة");
-
-                return;
-
-            }
-
-            groups =
-                groups.filter(
-                    g => g.id !== currentGroupId
-                );
-
-            currentGroupId = null;
-
-            students = [];
-
-            savedSurveys = [];
-
-            survey = {
-                title:"الاستبيان",
-                choices:[
-                    {text:"الاختيار الأول",score:1},
-                    {text:"الاختيار الثاني",score:2},
-                    {text:"الاختيار الثالث",score:3},
-                    {text:"الاختيار الرابع",score:4}
-                ]
-            };
-
-            renderGroups();
-            renderAll();
-
-            setStatus(
-                "تم حذف المجموعة"
-            );
-
-        }
-    );
-
-}
-
-
-/* =====================================================
-   اختيار المجموعة
-===================================================== */
-
-document
-    .getElementById("groupSelect")
-    .addEventListener(
-        "change",
-        async function(){
-
-            currentGroupId =
-                this.value || null;
-
-            document.getElementById(
-                "groupActions"
-            ).style.display =
-                currentGroupId
-                    ? "flex"
-                    : "none";
-
-            if(currentGroupId){
-
-                await loadGroupData();
-
-            }else{
-
-                students = [];
-                savedSurveys = [];
-
-                renderAll();
-
-            }
-
-        }
-    );
-
-
-/* =====================================================
-   تحميل بيانات المجموعة
-===================================================== */
-
-async function loadGroupData(){
-
-    if(!currentGroupId)
-        return;
-
-    setStatus(
-        "جاري تحميل بيانات المجموعة..."
-    );
-
-    const [
-        studentsResult,
-        surveyResult,
-        savedResult
-    ] = await Promise.all([
-
-        supabaseClient
-            .from("students")
-            .select("*")
-            .eq("group_id",currentGroupId)
-            .order("created_at",{ascending:true}),
-
-        supabaseClient
-            .from("survey_settings")
-            .select("*")
-            .eq("group_id",currentGroupId)
-            .maybeSingle(),
-
-        supabaseClient
-            .from("saved_surveys")
-            .select("*")
-            .eq("group_id",currentGroupId)
-            .order("created_at",{ascending:false})
-
-    ]);
-
-    if(studentsResult.error){
-        console.error(studentsResult.error);
-    }
-
-    students =
-        studentsResult.data || [];
-
-    if(surveyResult.data){
-
-        survey = {
-            title:surveyResult.data.title,
-            choices:
-                surveyResult.data.choices || []
-        };
-
-    }else{
-
-        await createDefaultSurvey();
-
-    }
-
-    savedSurveys =
-        (savedResult.data || []).map(item => ({
-
-            id:item.id,
-            title:item.title,
-            day:item.day,
-            date:item.survey_date,
-            students:item.students || []
-
-        }));
-
-    renderAll();
-
-    const group =
-        groups.find(
-            g => g.id === currentGroupId
-        );
-
-    setStatus(
-        group
-            ? `المجموعة الحالية: ${group.name}`
-            : "تم تحميل البيانات"
-    );
-
-}
-
-
-/* =====================================================
-   الاستبيان الافتراضي
-===================================================== */
-
-async function createDefaultSurvey(){
-
-    survey = {
-        title:"الاستبيان",
-        choices:[
-            {text:"الاختيار الأول",score:1},
-            {text:"الاختيار الثاني",score:2},
-            {text:"الاختيار الثالث",score:3},
-            {text:"الاختيار الرابع",score:4}
-        ]
-    };
-
-    if(!currentGroupId)
-        return;
-
-    await supabaseClient
-        .from("survey_settings")
-        .insert({
-
-            group_id:currentGroupId,
-
-            title:survey.title,
-
-            choices:survey.choices
-
-        });
-
-}
-
-
-/* =====================================================
-   الطلاب
-===================================================== */
-
-async function addStudent(){
-
-    if(!currentGroupId){
-
-        alert("اختر مجموعة أولاً");
-
-        return;
-
-    }
 
     const input =
         document.getElementById(
@@ -1670,133 +1806,35 @@ async function addStudent(){
 
     if(!name){
 
-        alert("اكتب اسم الطالب");
+        alert("اكتب اسم الطالب أولاً");
+
+        input.focus();
 
         return;
 
     }
 
-    const {data,error} =
-        await supabaseClient
-            .from("students")
-            .insert({
-
-                group_id:currentGroupId,
-
-                name:name
-
-            })
-            .select()
-            .single();
-
-    if(error){
-
-        alert("تعذر إضافة الطالب");
-
-        console.error(error);
-
-        return;
-
-    }
-
-    students.push(data);
-
-    input.value = "";
-
-    renderAll();
-
-}
-
-
-async function editStudent(){
-
-    const id =
-        document.getElementById(
-            "studentSelect"
-        ).value;
-
-    if(!id)
-        return;
-
-    const student =
-        students.find(
-            s => s.id === id
-        );
-
-    if(!student)
-        return;
-
-    inputAction(
-        "تعديل اسم الطالب",
-        student.name,
-        async function(newName){
-
-            const {error} =
-                await supabaseClient
-                    .from("students")
-                    .update({
-                        name:newName
-                    })
-                    .eq("id",id);
-
-            if(error){
-
-                alert("تعذر تعديل اسم الطالب");
-
-                return;
-
-            }
-
-            student.name = newName;
-
-            renderAll();
-
-        }
-    );
-
-}
-
-
-async function deleteStudent(){
-
-    const id =
-        document.getElementById(
-            "studentSelect"
-        ).value;
-
-    if(!id)
-        return;
-
-    const student =
-        students.find(
-            s => s.id === id
-        );
-
-    if(!student)
-        return;
 
     confirmAction(
-        `هل تريد حذف الطالب "${student.name}"؟`,
-        async function(){
+        `هل تريد إضافة الطالب "${name}" إلى مجموعة "${group.name}"؟`,
+        function(){
 
-            const {error} =
-                await supabaseClient
-                    .from("students")
-                    .delete()
-                    .eq("id",id);
+            group.students.push({
 
-            if(error){
+                id:
+                    Date.now() +
+                    Math.floor(Math.random()*1000),
 
-                alert("تعذر حذف الطالب");
+                name:name,
 
-                return;
+                answers:[]
 
-            }
+            });
 
-            students =
-                students.filter(
-                    s => s.id !== id
-                );
+
+            input.value = "";
+
+            saveData();
 
             renderAll();
 
@@ -1817,18 +1855,29 @@ function renderStudentSelect(){
             "studentSelect"
         );
 
-    select.innerHTML =
-        `<option value="">
-            اختر طالبًا للتعديل أو الحذف
-        </option>`;
+    if(!select) return;
 
-    students.forEach(
+    select.innerHTML = `
+        <option value="">
+            اختر طالبًا للتعديل أو الحذف
+        </option>
+    `;
+
+
+    const group =
+        getCurrentGroup();
+
+    if(!group) return;
+
+
+    group.students.forEach(
         (student,index) => {
 
             const option =
                 document.createElement("option");
 
-            option.value = student.id;
+            option.value =
+                student.id;
 
             option.textContent =
                 `${index+1} - ${student.name}`;
@@ -1838,24 +1887,184 @@ function renderStudentSelect(){
         }
     );
 
+
+    document.getElementById(
+        "selectedStudentActions"
+    ).style.display =
+        "none";
+
 }
 
 
-document
-    .getElementById("studentSelect")
-    .addEventListener(
-        "change",
+document.getElementById(
+    "studentSelect"
+).addEventListener(
+    "change",
+    function(){
+
+        document.getElementById(
+            "selectedStudentActions"
+        ).style.display =
+            this.value
+                ? "flex"
+                : "none";
+
+    }
+);
+
+
+/* =====================================================
+   تعديل الطالب
+===================================================== */
+
+function editSelectedStudent(){
+
+    const group =
+        getCurrentGroup();
+
+    if(!group) return;
+
+
+    const id =
+        Number(
+            document.getElementById(
+                "studentSelect"
+            ).value
+        );
+
+    if(!id) return;
+
+
+    const student =
+        group.students.find(
+            s => s.id === id
+        );
+
+    if(!student) return;
+
+
+    editingStudentId = id;
+
+    document.getElementById(
+        "editStudentInput"
+    ).value =
+        student.name;
+
+    document.getElementById(
+        "editStudentModal"
+    ).classList.add("active");
+
+}
+
+
+function confirmEditStudent(){
+
+    const group =
+        getCurrentGroup();
+
+    if(!group) return;
+
+
+    const input =
+        document.getElementById(
+            "editStudentInput"
+        );
+
+    const newName =
+        input.value.trim();
+
+    if(!newName){
+
+        alert("اكتب اسم الطالب");
+
+        return;
+
+    }
+
+
+    const student =
+        group.students.find(
+            s =>
+                s.id === editingStudentId
+        );
+
+    if(!student) return;
+
+
+    confirmAction(
+        `هل تريد تغيير اسم الطالب إلى "${newName}"؟`,
         function(){
 
-            document.getElementById(
-                "selectedStudentActions"
-            ).style.display =
-                this.value
-                    ? "flex"
-                    : "none";
+            student.name = newName;
+
+            closeEditStudent();
+
+            saveData();
+
+            renderAll();
 
         }
     );
+
+}
+
+
+function closeEditStudent(){
+
+    document.getElementById(
+        "editStudentModal"
+    ).classList.remove("active");
+
+    editingStudentId = null;
+
+}
+
+
+/* =====================================================
+   حذف الطالب
+===================================================== */
+
+function confirmDeleteSelectedStudent(){
+
+    const group =
+        getCurrentGroup();
+
+    if(!group) return;
+
+
+    const id =
+        Number(
+            document.getElementById(
+                "studentSelect"
+            ).value
+        );
+
+
+    const student =
+        group.students.find(
+            s => s.id === id
+        );
+
+    if(!student) return;
+
+
+    confirmAction(
+        `هل تريد حذف الطالب "${student.name}" من المجموعة؟`,
+        function(){
+
+            group.students =
+                group.students.filter(
+                    s => s.id !== id
+                );
+
+            saveData();
+
+            renderAll();
+
+        }
+    );
+
+}
 
 
 /* =====================================================
@@ -1864,10 +2073,17 @@ document
 
 function renderSurveyEditor(){
 
+    const group =
+        getCurrentGroup();
+
+    if(!group) return;
+
+
     document.getElementById(
         "surveyTitle"
     ).value =
-        survey.title;
+        group.survey.title;
+
 
     const container =
         document.getElementById(
@@ -1876,21 +2092,22 @@ function renderSurveyEditor(){
 
     container.innerHTML = "";
 
-    survey.choices.forEach(
-        choice =>
+
+    group.survey.choices.forEach(
+        choice => {
+
             addChoice(
                 choice.text,
                 choice.score
-            )
+            );
+
+        }
     );
 
 }
 
 
-function addChoice(
-    text="",
-    score=1
-){
+function addChoice(text="",score=1){
 
     const container =
         document.getElementById(
@@ -1903,44 +2120,64 @@ function addChoice(
     row.className =
         "choice-row";
 
+
     row.innerHTML = `
 
         <input
             type="text"
             placeholder="نص الاختيار"
-            value="${escapeHTML(text)}">
+            value="${escapeHTML(text)}"
+        >
 
         <input
             type="number"
             min="0"
             step="0.5"
-            value="${score}">
+            value="${score}"
+        >
 
         <button
-            onclick="this.parentElement.remove()">
+            type="button"
+            onclick="this.parentElement.remove()"
+            title="حذف">
             ×
         </button>
+
     `;
+
 
     container.appendChild(row);
 
 }
 
 
-async function saveSurveySettings(){
+function confirmSaveSurveySettings(){
 
-    if(!currentGroupId){
+    confirmAction(
+        "هل تريد حفظ تعديلات إعدادات الاستبيان لهذه المجموعة؟",
+        function(){
 
-        alert("اختر مجموعة أولاً");
+            saveSurveySettings();
 
-        return;
+        }
+    );
 
-    }
+}
+
+
+function saveSurveySettings(){
+
+    const group =
+        getCurrentGroup();
+
+    if(!group) return;
+
 
     const title =
         document.getElementById(
             "surveyTitle"
         ).value.trim();
+
 
     if(!title){
 
@@ -1950,12 +2187,14 @@ async function saveSurveySettings(){
 
     }
 
+
     const rows =
         document.querySelectorAll(
             "#choicesEditor .choice-row"
         );
 
     const choices = [];
+
 
     rows.forEach(row => {
 
@@ -1971,88 +2210,61 @@ async function saveSurveySettings(){
         if(text){
 
             choices.push({
+
                 text:text,
-                score:isNaN(score)
-                    ? 0
-                    : score
+
+                score:
+                    isNaN(score)
+                        ? 0
+                        : score
+
             });
 
         }
 
     });
 
+
     if(!choices.length){
 
         alert(
-            "أضف اختيارًا واحدًا على الأقل"
+            "يجب إضافة اختيار واحد على الأقل"
         );
 
         return;
 
     }
 
-    const {data,error} =
-        await supabaseClient
-            .from("survey_settings")
-            .upsert({
 
-                group_id:currentGroupId,
+    group.survey.title =
+        title;
 
-                title:title,
+    group.survey.choices =
+        choices;
 
-                choices:choices,
 
-                updated_at:new Date().toISOString()
-
-            },{
-                onConflict:"group_id"
-            })
-            .select()
-            .single();
-
-    if(error){
-
-        console.error(error);
-
-        alert(
-            "تعذر حفظ إعداد الاستبيان"
-        );
-
-        return;
-
-    }
-
-    survey = {
-        title:data.title,
-        choices:data.choices
-    };
+    saveData();
 
     renderAll();
 
     alert(
-        "تم حفظ إعدادات الاستبيان"
+        "تم حفظ إعدادات الاستبيان للمجموعة الحالية"
     );
 
 }
 
 
 /* =====================================================
-   الصفحة الرئيسية
+   الرئيسية
 ===================================================== */
 
 function renderHome(){
 
     const group =
-        groups.find(
-            g => g.id === currentGroupId
-        );
+        getCurrentGroup();
 
-    document.getElementById(
-        "currentGroupHome"
-    ).textContent =
-        group
-            ? group.name
-            : "لم يتم اختيار مجموعة";
+    if(!group) return;
+
 
     document.getElementById(
         "homeSurveyTitle"
@@ -2066,35 +2278,19 @@ function renderHome(){
             color:#075b4e;
             font-weight:bold;
         ">
-            ${escapeHTML(survey.title)}
+            ${escapeHTML(group.survey.title)}
         </div>
+
     `;
+
 
     const container =
         document.getElementById(
             "homeStudents"
         );
 
-    if(!currentGroupId){
 
-        container.innerHTML = `
-
-            <div class="empty">
-
-                <div class="empty-icon">
-                    📚
-                </div>
-
-                اختر مجموعة من لوحة التحكم
-
-            </div>
-        `;
-
-        return;
-
-    }
-
-    if(!students.length){
+    if(!group.students.length){
 
         container.innerHTML = `
 
@@ -2104,18 +2300,25 @@ function renderHome(){
                     👨‍🎓
                 </div>
 
-                لا يوجد طلاب في هذه المجموعة
+                لا يوجد طلاب في المجموعة الحالية
+
+                <div style="margin-top:12px;">
+                    أضف الطلاب من لوحة التحكم
+                </div>
 
             </div>
+
         `;
 
         return;
 
     }
 
+
     container.innerHTML = "";
 
-    students.forEach(
+
+    group.students.forEach(
         (student,index) => {
 
             const card =
@@ -2124,18 +2327,18 @@ function renderHome(){
             card.className =
                 "student-card";
 
+
             let choicesHTML = "";
 
-            survey.choices.forEach(
+
+            group.survey.choices.forEach(
                 (choice,choiceIndex) => {
 
-                    const selected =
-                        student._answers || [];
-
                     const checked =
-                        selected.includes(
-                            choiceIndex
-                        );
+                        (
+                            student.answers[0] || []
+                        ).includes(choiceIndex);
+
 
                     choicesHTML += `
 
@@ -2146,30 +2349,34 @@ function renderHome(){
                                 ${checked ? "checked" : ""}
                                 onchange="
                                     setChoice(
-                                        '${student.id}',
+                                        ${student.id},
                                         ${choiceIndex}
                                     )
-                                ">
+                                "
+                            >
 
                             <span class="choice-text">
                                 ${escapeHTML(choice.text)}
                             </span>
 
                             <span class="choice-score">
-                                ${choice.score}
+                                ${formatNumber(choice.score)}
                             </span>
 
                         </label>
+
                     `;
 
                 }
             );
+
 
             const score =
                 calculateScore(student);
 
             const percentage =
                 calculatePercentage(student);
+
 
             card.innerHTML = `
 
@@ -2204,6 +2411,7 @@ function renderHome(){
 
             `;
 
+
             container.appendChild(card);
 
         }
@@ -2213,41 +2421,52 @@ function renderHome(){
 
 
 /* =====================================================
-   الاختيارات
+   تسجيل الاختيار
 ===================================================== */
 
 function setChoice(studentId,choiceIndex){
 
+    const group =
+        getCurrentGroup();
+
+    if(!group) return;
+
+
     const student =
-        students.find(
+        group.students.find(
             s => s.id === studentId
         );
 
-    if(!student)
-        return;
+    if(!student) return;
 
-    if(!student._answers)
-        student._answers = [];
 
-    const index =
-        student._answers.indexOf(
-            choiceIndex
-        );
+    if(!student.answers[0]){
+        student.answers[0] = [];
+    }
 
-    if(index === -1){
 
-        student._answers.push(
-            choiceIndex
-        );
+    const selected =
+        student.answers[0];
+
+    const position =
+        selected.indexOf(choiceIndex);
+
+
+    if(position === -1){
+
+        selected.push(choiceIndex);
 
     }else{
 
-        student._answers.splice(
-            index,
+        selected.splice(
+            position,
             1
         );
 
     }
+
+
+    saveData();
 
     renderHome();
 
@@ -2260,16 +2479,23 @@ function setChoice(studentId,choiceIndex){
 
 function calculateScore(student){
 
+    const group =
+        getCurrentGroup();
+
+    if(!group) return 0;
+
+
     let score = 0;
 
     const selected =
-        student._answers || [];
+        student.answers[0] || [];
+
 
     selected.forEach(
         index => {
 
             const choice =
-                survey.choices[index];
+                group.survey.choices[index];
 
             if(choice){
 
@@ -2281,6 +2507,7 @@ function calculateScore(student){
         }
     );
 
+
     return score;
 
 }
@@ -2288,7 +2515,13 @@ function calculateScore(student){
 
 function getMaxScore(){
 
-    return survey.choices.reduce(
+    const group =
+        getCurrentGroup();
+
+    if(!group) return 0;
+
+
+    return group.survey.choices.reduce(
         (sum,choice) =>
             sum +
             (Number(choice.score) || 0),
@@ -2303,8 +2536,10 @@ function calculatePercentage(student){
     const max =
         getMaxScore();
 
-    if(max <= 0)
+    if(max <= 0){
         return 0;
+    }
+
 
     return (
         calculateScore(student) /
@@ -2318,17 +2553,15 @@ function calculatePercentage(student){
    حفظ الاستبيان
 ===================================================== */
 
-async function confirmSaveSurvey(){
+function confirmSaveSurvey(){
 
-    if(!currentGroupId){
+    const group =
+        getCurrentGroup();
 
-        alert("اختر مجموعة أولاً");
+    if(!group) return;
 
-        return;
 
-    }
-
-    if(!students.length){
+    if(!group.students.length){
 
         alert(
             "لا يمكن حفظ الاستبيان بدون طلاب"
@@ -2338,24 +2571,27 @@ async function confirmSaveSurvey(){
 
     }
 
+
     const date =
         document.getElementById(
             "dateInput"
         ).value;
 
+
     if(!date){
 
-        alert("اختر التاريخ");
+        alert("اختر التاريخ أولاً");
 
         return;
 
     }
 
-    confirmAction(
-        "هل تريد حفظ الاستبيان والنتائج الحالية؟",
-        async function(){
 
-            await saveSurvey();
+    confirmAction(
+        `هل تريد حفظ الاستبيان والنتائج لمجموعة "${group.name}"؟`,
+        function(){
+
+            saveSurvey();
 
         }
     );
@@ -2363,28 +2599,44 @@ async function confirmSaveSurvey(){
 }
 
 
-async function saveSurvey(){
+function saveSurvey(){
+
+    const group =
+        getCurrentGroup();
+
+    if(!group) return;
+
 
     const day =
         document.getElementById(
             "daySelect"
         ).value;
 
+
     const date =
         document.getElementById(
             "dateInput"
         ).value;
 
+
+    if(!date){
+
+        alert("اختر التاريخ أولاً");
+
+        return;
+
+    }
+
+
     const resultStudents =
-        students.map(
+        group.students.map(
             (student,index) => ({
 
                 number:index+1,
 
                 name:student.name,
 
-                score:
-                    calculateScore(student),
+                score:calculateScore(student),
 
                 percentage:
                     calculatePercentage(student)
@@ -2392,53 +2644,29 @@ async function saveSurvey(){
             })
         );
 
-    const {data,error} =
-        await supabaseClient
-            .from("saved_surveys")
-            .insert({
 
-                group_id:currentGroupId,
+    group.savedSurveys.unshift({
 
-                title:survey.title,
+        id:
+            Date.now() +
+            Math.floor(Math.random()*1000),
 
-                day:day,
+        title:
+            group.survey.title,
 
-                survey_date:date,
+        day:day,
 
-                students:resultStudents
+        date:date,
 
-            })
-            .select()
-            .single();
-
-    if(error){
-
-        console.error(error);
-
-        alert(
-            "تعذر حفظ الاستبيان"
-        );
-
-        return;
-
-    }
-
-    savedSurveys.unshift({
-
-        id:data.id,
-
-        title:data.title,
-
-        day:data.day,
-
-        date:data.survey_date,
-
-        students:data.students
+        students:resultStudents
 
     });
 
+
+    saveData();
+
     alert(
-        "تم حفظ الاستبيان بنجاح"
+        "تم حفظ الاستبيان والنتائج داخل المجموعة الحالية بنجاح"
     );
 
     showSavedPage();
@@ -2447,7 +2675,7 @@ async function saveSurvey(){
 
 
 /* =====================================================
-   عرض المحفوظ
+   صفحة الاستبيانات المحفوظة
 ===================================================== */
 
 function showSavedPage(){
@@ -2472,26 +2700,20 @@ function renderSavedSurveys(){
             "savedResults"
         );
 
-    if(!currentGroupId){
+    const group =
+        getCurrentGroup();
 
-        container.innerHTML = `
 
-            <div class="empty">
+    if(!group){
 
-                <div class="empty-icon">
-                    📚
-                </div>
-
-                اختر مجموعة أولاً
-
-            </div>
-        `;
+        container.innerHTML = "";
 
         return;
 
     }
 
-    if(!savedSurveys.length){
+
+    if(!group.savedSurveys.length){
 
         container.innerHTML = `
 
@@ -2501,113 +2723,151 @@ function renderSavedSurveys(){
                     📂
                 </div>
 
-                لا توجد استبيانات محفوظة
+                لا توجد استبيانات محفوظة في المجموعة:
+
+                <strong>
+                    ${escapeHTML(group.name)}
+                </strong>
 
             </div>
+
         `;
 
         return;
 
     }
 
+
     container.innerHTML = "";
 
-    savedSurveys.forEach(item => {
 
-        const card =
-            document.createElement("div");
+    group.savedSurveys.forEach(
+        item => {
 
-        card.className =
-            "result-card";
+            const card =
+                document.createElement("div");
 
-        let rows = "";
+            card.className =
+                "result-card";
 
-        item.students.forEach(student => {
 
-            rows += `
+            let rows = "";
 
-                <div class="result-row">
 
-                    <div class="result-number">
-                        ${student.number}
+            item.students.forEach(
+                student => {
+
+                    rows += `
+
+                        <div class="result-row">
+
+                            <div class="result-number">
+                                ${student.number}
+                            </div>
+
+                            <div class="result-student">
+                                ${escapeHTML(student.name)}
+                            </div>
+
+                            <div class="result-score">
+                                ${formatNumber(student.score)}
+                            </div>
+
+                            <div class="result-percent">
+                                ${formatNumber(student.percentage)}%
+                            </div>
+
+                        </div>
+
+                    `;
+
+                }
+            );
+
+
+            card.innerHTML = `
+
+                <div class="result-head">
+
+                    <div class="day">
+                        ${escapeHTML(item.day)}
                     </div>
 
-                    <div class="result-student">
-                        ${escapeHTML(student.name)}
-                    </div>
-
-                    <div class="result-score">
-                        ${formatNumber(student.score)}
-                    </div>
-
-                    <div class="result-percent">
-                        ${formatNumber(student.percentage)}%
+                    <div class="date">
+                        ${formatDate(item.date)}
                     </div>
 
                 </div>
+
+                <div class="result-list">
+                    ${rows}
+                </div>
+
+                <div class="result-actions">
+
+                    <button
+                        class="action-btn small"
+                        onclick="copyResult(${item.id})">
+                        نسخ
+                    </button>
+
+                    <button
+                        class="action-btn small"
+                        onclick="shareWhatsApp(${item.id})">
+                        واتساب
+                    </button>
+
+                    <button
+                        class="action-btn small"
+                        onclick="exportText(${item.id})">
+                        TXT
+                    </button>
+
+                    <button
+                        class="action-btn small"
+                        onclick="exportExcel(${item.id})">
+                        Excel
+                    </button>
+
+                    <button
+                        class="action-btn small"
+                        onclick="exportPDF(${item.id})">
+                        PDF
+                    </button>
+
+                    <button
+                        class="action-btn small danger"
+                        onclick="confirmDeleteSaved(${item.id})">
+                        حذف
+                    </button>
+
+                </div>
+
             `;
 
-        });
 
-        card.innerHTML = `
+            container.appendChild(card);
 
-            <div class="result-head">
+        }
+    );
 
-                <div class="day">
-                    ${escapeHTML(item.day)}
-                </div>
+}
 
-                <div class="date">
-                    ${formatDate(item.date)}
-                </div>
 
-            </div>
+/* =====================================================
+   الحصول على استبيان محفوظ
+===================================================== */
 
-            <div class="result-list">
+function getSavedSurvey(id){
 
-                ${rows}
+    const group =
+        getCurrentGroup();
 
-            </div>
+    if(!group) return null;
 
-            <div class="result-actions">
-
-                <button class="action-btn small"
-                        onclick="copyResult('${item.id}')">
-                    نسخ
-                </button>
-
-                <button class="action-btn small"
-                        onclick="shareWhatsApp('${item.id}')">
-                    واتساب
-                </button>
-
-                <button class="action-btn small"
-                        onclick="exportText('${item.id}')">
-                    TXT
-                </button>
-
-                <button class="action-btn small"
-                        onclick="exportExcel('${item.id}')">
-                    Excel
-                </button>
-
-                <button class="action-btn small"
-                        onclick="exportPDF('${item.id}')">
-                    PDF
-                </button>
-
-                <button class="action-btn small danger"
-                        onclick="deleteSaved('${item.id}')">
-                    حذف
-                </button>
-
-            </div>
-
-        `;
-
-        container.appendChild(card);
-
-    });
+    return group.savedSurveys.find(
+        item => item.id === id
+    );
 
 }
 
@@ -2621,14 +2881,18 @@ function makeResultText(item){
     let text =
         `${item.day} - ${formatDate(item.date)}\n\n`;
 
-    item.students.forEach(student => {
 
-        text +=
-            `${student.number}. ${student.name} - ` +
-            `${formatNumber(student.score)} - ` +
-            `${formatNumber(student.percentage)}%\n`;
+    item.students.forEach(
+        student => {
 
-    });
+            text +=
+                `${student.number}. ${student.name} - ` +
+                `${formatNumber(student.score)} - ` +
+                `${formatNumber(student.percentage)}%\n`;
+
+        }
+    );
+
 
     return text.trim();
 
@@ -2639,47 +2903,56 @@ function makeResultText(item){
    نسخ
 ===================================================== */
 
-async function copyResult(id){
+function copyResult(id){
 
     const item =
-        savedSurveys.find(
-            s => s.id === id
-        );
+        getSavedSurvey(id);
 
-    if(!item)
-        return;
+    if(!item) return;
+
 
     const text =
         makeResultText(item);
 
-    try{
 
-        await navigator.clipboard.writeText(
-            text
-        );
+    if(navigator.clipboard){
 
-        alert("تم نسخ النتيجة");
+        navigator.clipboard
+            .writeText(text)
+            .then(
+                () => alert("تم نسخ النتيجة")
+            )
+            .catch(
+                () => fallbackCopy(text)
+            );
 
-    }catch(e){
+    }else{
 
-        const textarea =
-            document.createElement("textarea");
-
-        textarea.value = text;
-
-        document.body.appendChild(
-            textarea
-        );
-
-        textarea.select();
-
-        document.execCommand("copy");
-
-        textarea.remove();
-
-        alert("تم نسخ النتيجة");
+        fallbackCopy(text);
 
     }
+
+}
+
+
+function fallbackCopy(text){
+
+    const textarea =
+        document.createElement("textarea");
+
+    textarea.value = text;
+
+    document.body.appendChild(
+        textarea
+    );
+
+    textarea.select();
+
+    document.execCommand("copy");
+
+    textarea.remove();
+
+    alert("تم نسخ النتيجة");
 
 }
 
@@ -2691,19 +2964,19 @@ async function copyResult(id){
 function shareWhatsApp(id){
 
     const item =
-        savedSurveys.find(
-            s => s.id === id
-        );
+        getSavedSurvey(id);
 
-    if(!item)
-        return;
+    if(!item) return;
+
 
     const text =
         makeResultText(item);
 
+
     const url =
         "https://wa.me/?text=" +
         encodeURIComponent(text);
+
 
     window.open(
         url,
@@ -2720,21 +2993,23 @@ function shareWhatsApp(id){
 function exportText(id){
 
     const item =
-        savedSurveys.find(
-            s => s.id === id
-        );
+        getSavedSurvey(id);
 
-    if(!item)
-        return;
+    if(!item) return;
+
+
+    const text =
+        makeResultText(item);
+
 
     const blob =
         new Blob(
-            [makeResultText(item)],
+            [text],
             {
-                type:
-                    "text/plain;charset=utf-8"
+                type:"text/plain;charset=utf-8"
             }
         );
+
 
     downloadBlob(
         blob,
@@ -2751,22 +3026,21 @@ function exportText(id){
 function exportExcel(id){
 
     const item =
-        savedSurveys.find(
-            s => s.id === id
-        );
+        getSavedSurvey(id);
 
-    if(!item)
-        return;
+    if(!item) return;
+
 
     if(typeof XLSX === "undefined"){
 
         alert(
-            "مكتبة Excel غير متاحة"
+            "تعذر تحميل مكتبة Excel. تأكد من اتصال الإنترنت."
         );
 
         return;
 
     }
+
 
     const data = [
 
@@ -2776,44 +3050,46 @@ function exportExcel(id){
 
         [],
 
-        [
-            "رقم",
-            "اسم الطالب",
-            "النتيجة",
-            "النسبة المئوية"
-        ]
+        ["رقم","اسم الطالب","النتيجة","النسبة المئوية"]
 
     ];
 
-    item.students.forEach(student => {
 
-        data.push([
+    item.students.forEach(
+        student => {
 
-            student.number,
+            data.push([
 
-            student.name,
+                student.number,
 
-            student.score,
+                student.name,
 
-            Number(
-                student.percentage.toFixed(2)
-            )
+                student.score,
 
-        ]);
+                Number(
+                    student.percentage.toFixed(2)
+                )
 
-    });
+            ]);
+
+        }
+    );
+
 
     const worksheet =
         XLSX.utils.aoa_to_sheet(data);
 
+
     const workbook =
         XLSX.utils.book_new();
+
 
     XLSX.utils.book_append_sheet(
         workbook,
         worksheet,
         "النتائج"
     );
+
 
     XLSX.writeFile(
         workbook,
@@ -2830,12 +3106,14 @@ function exportExcel(id){
 function exportPDF(id){
 
     const item =
-        savedSurveys.find(
-            s => s.id === id
-        );
+        getSavedSurvey(id);
 
-    if(!item)
-        return;
+    if(!item) return;
+
+
+    const group =
+        getCurrentGroup();
+
 
     const rows =
         item.students.map(
@@ -2862,21 +3140,24 @@ function exportPDF(id){
             `
         ).join("");
 
+
     const win =
         window.open(
             "",
             "_blank"
         );
 
+
     if(!win){
 
         alert(
-            "اسمح للنوافذ المنبثقة من الموقع"
+            "يرجى السماح بالنوافذ المنبثقة حتى يتم إنشاء PDF."
         );
 
         return;
 
     }
+
 
     win.document.write(`
 
@@ -2888,28 +3169,32 @@ function exportPDF(id){
 
             <meta charset="UTF-8">
 
-            <title>
-                نتيجة الاستبيان
-            </title>
+            <title>نتيجة الاستبيان</title>
 
             <style>
 
                 body{
-                    font-family:
-                        Arial,Tahoma,sans-serif;
+                    font-family:Arial,Tahoma,sans-serif;
+                    padding:35px;
                     direction:rtl;
-                    padding:30px;
                 }
 
                 h1{
                     text-align:center;
                     color:#075b4e;
+                    margin-bottom:8px;
+                }
+
+                .group{
+                    text-align:center;
+                    font-size:18px;
+                    margin-bottom:7px;
                 }
 
                 .info{
                     text-align:center;
-                    margin:15px 0 25px;
-                    font-size:18px;
+                    margin-bottom:25px;
+                    font-size:17px;
                 }
 
                 table{
@@ -2930,357 +3215,381 @@ function exportPDF(id){
 
             </style>
 
-```
-    </head>
+        </head>
 
-    <body>
+        <body>
 
-        <h1>
-            ${escapeHTML(item.title)}
-        </h1>
+            <h1>
+                ${escapeHTML(item.title)}
+            </h1>
 
-        <div class="info">
+            <div class="group">
+                ${escapeHTML(group ? group.name : "")}
+            </div>
 
-            ${escapeHTML(item.day)}
-            -
-            ${formatDate(item.date)}
+            <div class="info">
+                ${escapeHTML(item.day)}
+                -
+                ${formatDate(item.date)}
+            </div>
 
-        </div>
+            <table>
 
-        <table>
+                <thead>
 
-            <thead>
+                    <tr>
+                        <th>رقم</th>
+                        <th>اسم الطالب</th>
+                        <th>النتيجة</th>
+                        <th>النسبة المئوية</th>
+                    </tr>
 
-                <tr>
+                </thead>
 
-                    <th>رقم</th>
-                    <th>اسم الطالب</th>
-                    <th>النتيجة</th>
-                    <th>النسبة المئوية</th>
+                <tbody>
 
-                </tr>
+                    ${rows}
 
-            </thead>
+                </tbody>
 
-            <tbody>
+            </table>
 
-                ${rows}
+            <script>
 
-            </tbody>
-
-        </table>
-
-        <script>
-
-            window.onload =
-                function(){
+                window.onload = function(){
 
                     window.print();
 
                 };
 
-        <\/script>
+            <\/script>
 
-    </body>
+        </body>
 
-    </html>
+        </html>
 
-`);
+    `);
 
-win.document.close();
-```
+
+    win.document.close();
 
 }
 
+
 /* =====================================================
-حذف استبيان محفوظ
+   حذف استبيان محفوظ
 ===================================================== */
 
-function deleteSaved(id){
+function confirmDeleteSaved(id){
 
-```
-const item =
-    savedSurveys.find(
-        s => s.id === id
-    );
+    const group =
+        getCurrentGroup();
 
-if(!item)
-    return;
+    if(!group) return;
 
-confirmAction(
-    `هل تريد حذف الاستبيان بتاريخ ${formatDate(item.date)}؟`,
-    async function(){
 
-        const {error} =
-            await supabaseClient
-                .from("saved_surveys")
-                .delete()
-                .eq("id",id);
+    const item =
+        getSavedSurvey(id);
 
-        if(error){
+    if(!item) return;
 
-            alert(
-                "تعذر حذف الاستبيان"
-            );
 
-            return;
+    confirmAction(
+        `هل تريد حذف الاستبيان المحفوظ بتاريخ ${formatDate(item.date)}؟`,
+        function(){
+
+            group.savedSurveys =
+                group.savedSurveys.filter(
+                    s => s.id !== id
+                );
+
+
+            saveData();
+
+            renderSavedSurveys();
 
         }
-
-        savedSurveys =
-            savedSurveys.filter(
-                s => s.id !== id
-            );
-
-        renderSavedSurveys();
-
-    }
-);
-```
+    );
 
 }
 
+
 /* =====================================================
-تحميل ملف
+   تحميل ملف
 ===================================================== */
 
 function downloadBlob(blob,filename){
 
-```
-const url =
-    URL.createObjectURL(blob);
+    const url =
+        URL.createObjectURL(blob);
 
-const link =
-    document.createElement("a");
+    const link =
+        document.createElement("a");
 
-link.href = url;
+    link.href = url;
 
-link.download = filename;
+    link.download = filename;
 
-document.body.appendChild(link);
+    document.body.appendChild(link);
 
-link.click();
+    link.click();
 
-link.remove();
+    link.remove();
 
-URL.revokeObjectURL(url);
-```
-
-}
-
-/* =====================================================
-إعادة الرسم
-===================================================== */
-
-function renderAll(){
-
-```
-renderGroups();
-
-renderStudentSelect();
-
-renderSurveyEditor();
-
-renderHome();
-
-if(
-    document.getElementById(
-        "savedPage"
-    ).classList.contains("active")
-){
-
-    renderSavedSurveys();
-
-}
-```
-
-}
-
-/* =====================================================
-Realtime
-===================================================== */
-
-function setupRealtime(){
-
-```
-supabaseClient
-    .channel("database-changes")
-
-    .on(
-        "postgres_changes",
-        {
-            event:"*",
-            schema:"public",
-            table:"groups"
-        },
-        async function(){
-
-            await loadGroups();
-
-        }
-    )
-
-    .on(
-        "postgres_changes",
-        {
-            event:"*",
-            schema:"public",
-            table:"students"
-        },
-        async function(payload){
-
-            if(
-                payload.new &&
-                payload.new.group_id !== currentGroupId &&
-                payload.old &&
-                payload.old.group_id !== currentGroupId
-            ){
-                return;
-            }
-
-            if(currentGroupId)
-                await loadGroupData();
-
-        }
-    )
-
-    .on(
-        "postgres_changes",
-        {
-            event:"*",
-            schema:"public",
-            table:"survey_settings"
-        },
-        async function(payload){
-
-            if(
-                payload.new &&
-                payload.new.group_id !== currentGroupId
-            ){
-                return;
-            }
-
-            if(currentGroupId)
-                await loadGroupData();
-
-        }
-    )
-
-    .on(
-        "postgres_changes",
-        {
-            event:"*",
-            schema:"public",
-            table:"saved_surveys"
-        },
-        async function(payload){
-
-            if(
-                payload.new &&
-                payload.new.group_id !== currentGroupId
-            ){
-                return;
-            }
-
-            if(currentGroupId)
-                await loadGroupData();
-
-        }
-    )
-
-    .subscribe(function(status){
-
-        if(status === "SUBSCRIBED"){
-
-            setStatus(
-                "متصل بقاعدة البيانات ✓"
-            );
-
-        }
-
-    });
-```
-
-}
-
-/* =====================================================
-Enter
-===================================================== */
-
-document
-.getElementById("studentName")
-.addEventListener(
-"keydown",
-function(event){
-
-```
-        if(event.key === "Enter")
-            addStudent();
-
-    }
-);
-```
-
-document
-.getElementById("groupName")
-.addEventListener(
-"keydown",
-function(event){
-
-```
-        if(event.key === "Enter")
-            addGroup();
-
-    }
-);
-```
-
-/* =====================================================
-تشغيل
-===================================================== */
-
-async function init(){
-
-```
-setToday();
-
-await loadGroups();
-
-if(groups.length){
-
-    currentGroupId =
-        groups[0].id;
-
-    document.getElementById(
-        "groupSelect"
-    ).value =
-        currentGroupId;
-
-    document.getElementById(
-        "groupActions"
-    ).style.display =
-        "flex";
-
-    await loadGroupData();
-
-}else{
-
-    renderAll();
-
-    setStatus(
-        "أنشئ أول مجموعة من لوحة التحكم"
+    setTimeout(
+        () => URL.revokeObjectURL(url),
+        100
     );
 
 }
 
-setupRealtime();
-```
+
+/* =====================================================
+   التاريخ
+===================================================== */
+
+function formatDate(date){
+
+    if(!date) return "";
+
+    const parts =
+        date.split("-");
+
+    if(parts.length !== 3){
+        return date;
+    }
+
+    return `${parts[2]}/${parts[1]}/${parts[0]}`;
 
 }
 
-init();
+
+/* =====================================================
+   الأرقام
+===================================================== */
+
+function formatNumber(number){
+
+    const value =
+        Number(number) || 0;
+
+    return Number(
+        value.toFixed(2)
+    );
+
+}
+
+
+/* =====================================================
+   حماية HTML
+===================================================== */
+
+function escapeHTML(text){
+
+    return String(text)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* =====================================================
+   تاريخ اليوم
+===================================================== */
+
+function setToday(){
+
+    const now =
+        new Date();
+
+
+    const year =
+        now.getFullYear();
+
+
+    const month =
+        String(
+            now.getMonth()+1
+        ).padStart(2,"0");
+
+
+    const day =
+        String(
+            now.getDate()
+        ).padStart(2,"0");
+
+
+    const dateInput =
+        document.getElementById(
+            "dateInput"
+        );
+
+
+    if(!dateInput.value){
+
+        dateInput.value =
+            `${year}-${month}-${day}`;
+
+    }
+
+
+    const days = [
+
+        "الأحد",
+        "الإثنين",
+        "الثلاثاء",
+        "الأربعاء",
+        "الخميس",
+        "الجمعة",
+        "السبت"
+
+    ];
+
+
+    const daySelect =
+        document.getElementById(
+            "daySelect"
+        );
+
+
+    if(!daySelect.value){
+
+        daySelect.value =
+            days[now.getDay()];
+
+    }
+
+}
+
+
+/* =====================================================
+   إعادة الرسم
+===================================================== */
+
+function renderAll(){
+
+    renderGroupSelects();
+
+    renderStudentSelect();
+
+    renderSurveyEditor();
+
+    renderHome();
+
+    if(
+        document.getElementById(
+            "savedPage"
+        ).classList.contains("active")
+    ){
+
+        renderSavedSurveys();
+
+    }
+
+}
+
+
+/* =====================================================
+   Enter لإضافة طالب
+===================================================== */
+
+document.getElementById(
+    "studentName"
+).addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key === "Enter"){
+
+            event.preventDefault();
+
+            confirmAddStudent();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   Enter في إضافة مجموعة
+===================================================== */
+
+document.getElementById(
+    "groupNameInput"
+).addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key === "Enter"){
+
+            event.preventDefault();
+
+            createGroup();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   Enter في تعديل المجموعة
+===================================================== */
+
+document.getElementById(
+    "renameGroupInput"
+).addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key === "Enter"){
+
+            event.preventDefault();
+
+            renameGroup();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   ESC لإغلاق النوافذ
+===================================================== */
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key !== "Escape") return;
+
+        closeConfirm();
+        closeGroupModal();
+        closeRenameGroupModal();
+        closeEditStudent();
+
+    }
+);
+
+
+/* =====================================================
+   التشغيل
+===================================================== */
+
+loadData();
+
+setToday();
+
+renderAll();
 
 </script>
 
 </body>
 </html>
+```
+
