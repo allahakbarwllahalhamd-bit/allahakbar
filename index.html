@@ -297,20 +297,18 @@ async function saveStudentAnswers(studentId,answers){
    تحميل البيانات
    ========================= */
 async function loadGroups(){
-  const {data,error}=await withTimeout(
+  const res=await withTimeout(
     supabaseClient.from("groups").select("id,name,created_at").order("id",{ascending:true})
   );
-  if(error)throw error;
+  if(res.error)throw res.error;
 
-  groups=data||[];
+  groups=res.data||[];
 
-  /* لا ننشئ مجموعة إلا إذا كانت قاعدة البيانات فارغة فعلاً. */
+  /* لا ننشئ أي بيانات تلقائيًا عند فتح الموقع. */
   if(!groups.length){
-    const {data:newGroup,error:insertError}=await withTimeout(
-      supabaseClient.from("groups").insert({name:"المجموعة الأولى"}).select("id,name,created_at").single()
-    );
-    if(insertError)throw insertError;
-    groups=[newGroup];
+    currentGroupId=null;
+    renderGroups();
+    return;
   }
 
   if(!currentGroupId||!groups.some(g=>String(g.id)===String(currentGroupId))){
@@ -339,16 +337,8 @@ async function loadGroupData(){
     students:Array.isArray(x.students)?x.students:[]
   }));
 
-  if(!surveyRes.data){
-    const {error}=await withTimeout(
-      supabaseClient.from("survey_settings").upsert(
-        {group_id:currentGroupId,title:currentSurvey.title,choices:currentSurvey.choices},
-        {onConflict:"group_id"}
-      )
-    );
-    if(error)throw error;
-  }
-
+  /* إذا لم يوجد إعداد للاستبيان، نستخدم الإعداد الافتراضي في الذاكرة فقط.
+     لا ننفذ INSERT/UPSERT تلقائيًا عند فتح الموقع، حفاظًا على البيانات وصلاحيات RLS. */
   renderAll();
 }
 
@@ -843,10 +833,22 @@ function setupRealtime(){
 /* =========================
    الاتصال والأخطاء
    ========================= */
+function errorDetails(err){
+  if(!err)return "خطأ غير معروف";
+  if(typeof err === "string")return err;
+  const parts=[];
+  if(err.message)parts.push(err.message);
+  if(err.code)parts.push("Code: "+err.code);
+  if(err.details)parts.push("Details: "+err.details);
+  if(err.hint)parts.push("Hint: "+err.hint);
+  if(parts.length)return parts.join(" | ");
+  try{return JSON.stringify(err)}catch(_){return String(err)}
+}
+
 function showDbError(err){
-  console.error(err);
-  const msg=err?.message||String(err);
-  status("تعذر الاتصال بقاعدة البيانات: "+msg,"error");
+  console.error("Supabase error:",err);
+  const msg=errorDetails(err);
+  status("مشكلة قاعدة البيانات: "+msg,"error");
 }
 
 async function init(){
@@ -861,24 +863,23 @@ async function init(){
       {auth:{persistSession:false}}
     );
 
-    status("جارٍ اختبار الاتصال...");
+    status("جارٍ الاتصال بقاعدة البيانات...");
 
-    const test=await withTimeout(
-      supabaseClient.from("groups").select("id",{head:true,count:"exact"}),
-      12000
-    );
-
-    if(test.error)throw test.error;
-
+    /* اختبار الاتصال الحقيقي بقراءة البيانات بدل طلب HEAD/count،
+       لأن بعض إعدادات Supabase/RLS ترفض HEAD أو count رغم أن SELECT يعمل. */
     await loadGroups();
-    await loadGroupData();
+    if(currentGroupId){
+      await loadGroupData();
+    }else{
+      renderAll();
+    }
     setupRealtime();
     status("متصل بقاعدة البيانات ✓","ok");
 
   }catch(err){
     showDbError(err);
     renderAll();
-    alert("تعذر الاتصال بقاعدة Supabase.\n\nتأكد من أن الجداول والصلاحيات موجودة كما هي، ولن يقوم هذا الإصدار بحذف أو إعادة إنشاء أي بيانات موجودة.\n\nالتفاصيل: "+(err?.message||err));
+    alert("تعذر الاتصال بقاعدة Supabase.\n\nالنسخة الحالية لا تنشئ ولا تحذف أي مجموعة أو طالب أو استبيان تلقائيًا.\n\nإذا ظهر Code مثل 42501 أو رسالة RLS/permission denied، فالمشكلة في سياسات الوصول (RLS) للمستخدم المجهول، وليست في واجهة الموقع.\n\nالتفاصيل: "+errorDetails(err));
   }
 }
 
